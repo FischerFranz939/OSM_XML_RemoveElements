@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' generator='JOSM'>
+  <node id='31287590' timestamp='2016-07-06T01:21:43Z' uid='548288' user='WayneSchlegel' visible='true' version='3' changeset='40512409' lat='48.5288901' lon='9.3514616' />
+  <bounds minlat='48.5297218' minlon='9.3489575' maxlat='48.5378919' maxlon='9.3748784' origin='CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)' />
+  <node id='60117358' timestamp='2020-05-05T13:16:49Z' uid='10056196' user='NVBWSeifert' visible='true' version='10' changeset='84698245' lat='48.5278879' lon='9.3443126'>
+    <tag k='ele' v='397' />
+    <tag k='name' v='Dettingen Erms Mitte' />
+    <tag k='network' v='Naldo' />
+    <tag k='official_name' v='Dettingen-Mitte' />
+    <tag k='operator' v='Erms-Neckar-Bahn AG' />
+    <tag k='public_transport' v='station' />
+    <tag k='railway' v='halt' />
+    <tag k='railway:ref' v='TDTU' />
+    <tag k='ref:IFOPT' v='de:08415:28235' />
+    <tag k='start_date' v='27.12.1873' />
+    <tag k='uic_ref' v='8070679' />
+    <tag k='wheelchair' v='yes' />
+  </node>
+</osm>

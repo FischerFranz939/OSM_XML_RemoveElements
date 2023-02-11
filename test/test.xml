@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' generator='JOSM'>
+  <bounds minlat='48.5297218' minlon='9.3489575' maxlat='48.5378919' maxlon='9.3748784' origin='CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)' />
+  <node id='31287590' timestamp='2016-07-06T01:21:43Z' uid='548288' user='WayneSchlegel' visible='true' version='3' changeset='40512409' lat='48.5288901' lon='9.3514616' />
+  <node id='60117350' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='15' changeset='40512409' lat='48.5243657' lon='9.3493966' />
+  <node id='60117351' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='14' changeset='40512409' lat='48.5249231' lon='9.3488887' />
+  <node id='60117355' timestamp='2014-06-17T22:06:10Z' uid='469377' user='HO90' visible='true' version='13' changeset='22994428' lat='48.5269873' lon='9.3469227' />
+  <node id='60117356' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='15' changeset='40512409' lat='48.5272446' lon='9.3464427' />
+  <node id='60117357' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='16' changeset='40512409' lat='48.5274853' lon='9.3458671' />
+  <node id='60117358' timestamp='2020-05-05T13:16:49Z' uid='10056196' user='NVBWSeifert' visible='true' version='10' changeset='84698245' lat='48.5278879' lon='9.3443126'>
+    <tag k='ele' v='397' />
+    <tag k='name' v='Dettingen Erms Mitte' />
+    <tag k='network' v='Naldo' />
+    <tag k='official_name' v='Dettingen-Mitte' />
+    <tag k='operator' v='Erms-Neckar-Bahn AG' />
+    <tag k='public_transport' v='station' />
+    <tag k='railway' v='halt' />
+    <tag k='railway:ref' v='TDTU' />
+    <tag k='ref:IFOPT' v='de:08415:28235' />
+    <tag k='start_date' v='27.12.1873' />
+    <tag k='uic_ref' v='8070679' />
+    <tag k='wheelchair' v='yes' />
+  </node>
+  <node id='60117362' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='17' changeset='40512409' lat='48.5289849' lon='9.3394266' />
+  <node id='60117364' timestamp='2020-05-05T13:16:49Z' uid='10056196' user='NVBWSeifert' visible='true' version='10' changeset='84698245' lat='48.5292545' lon='9.3369825'>
+    <tag k='name' v='Dettingen Erms Lehen' />
+    <tag k='network' v='naldo' />
+    <tag k='official_name' v='Dettingen Lehen' />
+    <tag k='operator' v='Erms-Neckar-Bahn AG' />
+    <tag k='public_transport' v='station' />
+    <tag k='railway' v='halt' />
+    <tag k='railway:ref' v='TDTUL' />
+    <tag k='ref:IFOPT' v='de:08415:28209' />
+    <tag k='uic_ref' v='8001422' />
+    <tag k='wheelchair' v='yes' />
+  </node>
+  <node id='251665769' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='8' changeset='40311689' lat='48.5328165' lon='9.3441201' />
+  <node id='251665771' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='6' changeset='40311689' lat='48.5329012' lon='9.3447478' />
+  <node id='251665772' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='5' changeset='40311689' lat='48.5328829' lon='9.3450466' />
+  <node id='251665773' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='5' changeset='40311689' lat='48.532515' lon='9.3473807' />
+  <node id='251665774' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='4' changeset='40311689' lat='48.5319697' lon='9.348919' />
+  <node id='251665775' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='5' changeset='40311689' lat='48.5317629' lon='9.34934' />
+  <node id='251665776' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='5' changeset='40311689' lat='48.5314869' lon='9.3497587' />
+  <node id='343556624' timestamp='2012-10-05T18:32:53Z' uid='548288' user='WayneSchlegel' visible='true' version='3' changeset='13376550' lat='48.5518545' lon='9.2802616'>
+    <tag k='power' v='tower' />
+    <tag k='ref' v='517/90' />
+    <tag k='source' v='survey;image' />
+  </node>
+  <node id='343556645' timestamp='2012-10-05T18:32:53Z' uid='548288' user='WayneSchlegel' visible='true' version='3' changeset='13376550' lat='48.5515436' lon='9.2826163'>
+    <tag k='power' v='tower' />
+    <tag k='ref' v='519/051' />
+    <tag k='source' v='survey;image' />
+  </node>
+  <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+    <nd ref="3721534116" />
+    <nd ref="3747488458" />
+    <nd ref="3747488457" />
+    <nd ref="3747488456" />
+    <nd ref="3747488455" />
+    <nd ref="3747488454" />
+    <nd ref="3747488453" />
+    <nd ref="3747488452" />
+    <nd ref="3747488451" />
+    <nd ref="3747488450" />
+    <nd ref="3747488448" />
+    <nd ref="3747488447" />
+    <nd ref="3747488446" />
+    <nd ref="3747488445" />
+    <nd ref="3747488444" />
+    <nd ref="3747488443" />
+    <nd ref="3747488442" />
+    <nd ref="3747488440" />
+    <nd ref="3747488439" />
+    <nd ref="3747488438" />
+    <nd ref="3747488437" />
+    <nd ref="3747488436" />
+    <nd ref="3747488434" />
+    <nd ref="3747488433" />
+    <nd ref="3747488432" />
+    <nd ref="3747488431" />
+    <nd ref="3747488430" />
+    <nd ref="3747488429" />
+    <nd ref="3747488427" />
+    <nd ref="3747488425" />
+    <nd ref="3747486123" />
+    <nd ref="3747486122" />
+    <nd ref="3747486121" />
+    <tag k="highway" v="path" />
+  </way>
+  <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+    <tag k="ele" v="3143.45"/>
+    <tag k="name" v="Pica d&apos;Estats"/>
+    <tag k="name:ca" v="Pica d&apos;Estats"/>
+    <tag k="name:fr" v="Pique d&apos;Estats"/>
+    <tag k="name:de" v="Pique d&apos;Estats"/>
+    <tag k="name:sv" v="Pique d&apos;Estats"/>
+    <tag k="name:fi" v="Pique d&apos;Estats"/>
+    <tag k="name:no" v="Pique d&apos;Estats"/>
+    <tag k="name:ch" v="Pique d&apos;Estats"/>
+    <tag k="name:it" v="Pique d&apos;Estats"/>
+    <tag k="name:en" v="Pique d&apos;Estats"/>
+    <tag k="natural" v="peak"/>
+    <tag k="prominence" v="1290"/>
+    <tag k="source" v="Institut Cartogràfic de Catalunya"/>
+    <tag k="source:date" v="2010"/>
+    <tag k="source:prominence" v="https://en.wikipedia.org/wiki/List_of_Pyrenean_three-thousanders"/>
+    <tag k="summit:cross" v="yes"/>
+    <tag k="url:source" v="ftp://geofons.icc.cat/fitxes/100CIMS/271064006.pdf"/>
+    <tag k="wikidata" v="Q1537733"/>
+    <tag k="wikipedia" v="ca:Pica d&apos;Estats"/>
+  </node>
+  <way id='268645709' timestamp='2015-09-22T18:58:53Z' uid='548288' user='WayneSchlegel' visible='true' version='3' changeset='34190335'>
+    <nd ref='2739790961' />
+    <nd ref='2739790947' />
+    <nd ref='2739790946' />
+    <nd ref='2739790959' />
+    <nd ref='2739790961' />
+    <tag k='addr:city' v='Dettingen an der Erms' />
+    <tag k='addr:country' v='DE' />
+    <tag k='addr:housenumber' v='2' />
+    <tag k='addr:postcode' v='72581' />
+    <tag k='addr:street' v='Sperberweg' />
+    <tag k='building' v='yes' />
+  </way>
+  <node id='2739790961' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5317187' lon='9.359015' />
+  <node id='2739790947' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5316081' lon='9.359028' />
+  <node id='2739790946' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5315977' lon='9.3588286' />
+  <node id='2739790959' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5317084' lon='9.3588155' />
+  <node id="-117276" action="modify" lat="67.04228469059" lon="16.53687049956" />
+  <way id='-268645799' action="modify" timestamp='2015-09-22T18:58:53Z' uid='548288' user='WayneSchlegel' visible='true' changeset='34190335'>
+    <nd ref='2739790961' />
+    <nd ref='2739790947' />
+    <nd ref='2739790946' />
+    <nd ref='2739790959' />
+    <nd ref='2739790961' />
+    <tag k='addr:city' v='Dettingen an der Erms' />
+    <tag k='addr:country' v='DE' />
+    <tag k='addr:housenumber' v='2' />
+    <tag k='addr:postcode' v='72581' />
+    <tag k='addr:street' v='Sperberweg' />
+    <tag k='building' v='yes' />
+  </way>
+</osm>
