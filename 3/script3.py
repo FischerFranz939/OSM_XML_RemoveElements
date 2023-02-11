@@ -1,8 +1,13 @@
 from tkinter import END
 import xml.etree.ElementTree as ET
+import pathlib
 
+currentdir = str(pathlib.Path(__file__).parent.resolve())
+print("currentdir: ", currentdir)
 
-xml_file_in = "test1.xml"
+xml_file_in = currentdir + "\\" + "test1.xml"
+print("xml_file_in: ", xml_file_in)
+
 #xml_file_in = "andorra-latest.osm"
 xml_file_out = "output.xml"
 
@@ -14,6 +19,8 @@ def getelements(xml_file_in, tag):
         if event == 'end' and (elem.tag != tag and elem.tag != "osm"):
             yield elem
             root.clear() # free memory
+
+
 
 
 counter = 0
