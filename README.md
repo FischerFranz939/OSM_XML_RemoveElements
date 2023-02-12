@@ -1,7 +1,17 @@
 # OSM_XML_RemoveElements
 Program to remove unwanted elements from XML. E.g. remove all "power towers", "timestamps"...
 
-**work in progress**
+---
+**>>>>>> WORK IN PROGRESS <<<<<<**
+
+---
+
+The challenge is to process files with several GB size. Reading in the file and 
+preparing it for processing requires an extremely large amount of main memory 
+(factor ~10) see script (1). Therefore one idea is to process the file in smaller chuncks 
+see script (2) and script (3).
+
+---
 
 ## Different approaches
 
@@ -13,19 +23,24 @@ Program to remove unwanted elements from XML. E.g. remove all "power towers", "t
 
 2. Script 2
 
-    uses ElementTree
+    does not use a XML parser (like ElementTree)
 
     processes input XML-file in chunks
+
+    only string operations are possible (no XML operations)
 
 
 3. Script 3
 
-    uses ElementTree and tkinter (Python interface to Tcl/Tk)
+    uses ElementTree
 
-    processes the whole input XML-file
+    processes element by element of the input XML-file
 
-    count elements
+    currently: "only" count elements
 
+    only operations per element are possible
+
+---
 
 ## Links
 [markdown cheat-sheet](https://www.markdownguide.org/cheat-sheet/)
