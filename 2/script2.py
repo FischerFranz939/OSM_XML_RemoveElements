@@ -14,7 +14,7 @@ def main():
     time_begin = current_time_ms();
 
     current_dir = str(pathlib.Path(__file__).parent.resolve())
-    print("currentdir: ", current_dir)
+    print("current_dir: ", current_dir)
 
     xml_file_in = current_dir + "\\..\\test\\" + input_file_name
     xml_file_out = current_dir + "\\" + input_file_name + ".output"
