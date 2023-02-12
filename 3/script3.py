@@ -1,17 +1,12 @@
-from tkinter import END
 import xml.etree.ElementTree as ET
 import pathlib
 
-currentdir = str(pathlib.Path(__file__).parent.resolve())
-print("currentdir: ", currentdir)
 
-xml_file_in = currentdir + "\\" + "test1.xml"
-print("xml_file_in: ", xml_file_in)
-
-#xml_file_in = "andorra-latest.osm"
-xml_file_out = "output.xml"
+input_file_name = "test3.xml"
+#input_file_name = "andorra-latest.osm"
 
 
+#-------------------------------------------------------------------------------
 def getelements(xml_file_in, tag):
     context = iter(ET.iterparse(xml_file_in, events=('start', 'end')))
     _, root = next(context) # get root element
@@ -21,6 +16,16 @@ def getelements(xml_file_in, tag):
             root.clear() # free memory
 
 
+#-------------------------------------------------------------------------------
+# Main
+#-------------------------------------------------------------------------------
+current_dir = str(pathlib.Path(__file__).parent.resolve())
+print("currentdir: ", current_dir)
+
+xml_file_in = current_dir + "\\..\\test\\" + input_file_name
+xml_file_out = current_dir + "\\" + input_file_name + ".output"
+print("xml_file_in: ", xml_file_in)
+print("xml_file_out: ", xml_file_out)
 
 
 counter = 0

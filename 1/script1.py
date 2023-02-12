@@ -1,10 +1,11 @@
 import xml.etree.ElementTree as ET
 import time
+import pathlib
 
-xml_file_in = "test_formated.xml"
-#xml_file_in = "Neuffen_unbearbeitet.osm"
-#xml_file_in = "andorra-latest.osm"
-xml_file_out = "output.xml"
+
+input_file_name = "test2_formated.xml"
+#input_file_name = "Neuffen_unbearbeitet.osm"
+#input_file_name = "andorra-latest.osm"
 
 
 #-------------------------------------------------------------------------------
@@ -55,7 +56,16 @@ class Timer:
 # Main
 #-------------------------------------------------------------------------------
 def main():
-    tree = parse_input_file()
+    
+    current_dir = str(pathlib.Path(__file__).parent.resolve())
+    print("currentdir: ", current_dir)
+
+    xml_file_in = current_dir + "\\..\\test\\" + input_file_name
+    xml_file_out = current_dir + "\\" + input_file_name + ".output"
+    print("xml_file_in: ", xml_file_in)
+    print("xml_file_out: ", xml_file_out)
+
+    tree = parse_input_file(xml_file_in)
     root = tree.getroot()
     
     attribute_list = ["timestamp", "user", "uid", "changeset", "visible"]
@@ -66,17 +76,17 @@ def main():
     #remove_elements_by_subelement(root, "node", "tag", "power", "tower")
     #remove_elements_by_subelement(root, "way", "tag", "building", "yes")
     #remove_subelement_wildcard(root, "node", "tag", "wiki")
-    
+
     #remove_node_elements_with_no_reference(root, True)
     #performance_remove_node_elements_with_no_reference(root)
-    
+
     #adapt_elements_with_negative_id(root)
     adapt_subelements_with_negative_references(root)
     #remove_buildings(root)
-    
-    write_outputfile_file(tree) 
-    
-          
+
+    write_outputfile_file(tree, xml_file_out) 
+
+
 #-------------------------------------------------------------------------------
 # Functions
 #-------------------------------------------------------------------------------
@@ -387,15 +397,15 @@ def remove_attributes_from_element(root, target_attributes):
     timer.print_result()
 
 #-------------------------------------------------------------------------------
-def write_outputfile_file(tree):
+def write_outputfile_file(tree, file_out):
     timer = Timer("write_outputfile_file")
-    tree.write(xml_file_out, encoding="utf-8", xml_declaration=True)
+    tree.write(file_out, encoding="utf-8", xml_declaration=True)
     timer.print_result()
 
 #-------------------------------------------------------------------------------
-def parse_input_file():
+def parse_input_file(file_in):
     timer = Timer("parse_input_file")
-    tree = ET.parse(xml_file_in)
+    tree = ET.parse(file_in)
     timer.print_result()
     return tree
 

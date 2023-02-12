@@ -1,31 +1,25 @@
-import xml.etree.ElementTree as ET
 import time
+import pathlib
 
-# use different discs for input and output file ! 
-xml_file_in = "C:/Users/CB/Desktop/Python/andorra-latest.osm"
-#xml_file_in = "C:/Users/CB/Desktop/Python/test.xml"
-xml_file_out = "C:/Users/CB/Desktop/Python/output.xml"
 
+input_file_name = "test2.xml"
+#input_file_name = "andorra-latest.osm"
 CHUNK_SIZE = 5000 #configure CHUNK_SIZE (data read at a time) based on your system RAM. 
 
-#andorra-latest.osm, remove_timestamp_from_string
-#chunk size:  5000 bytes
-#time in ms:  764
-#chunk counter:  9930
-
-#chunk size:  1048576 bytes
-#time in ms:  819
-#chunk counter:  48
-
-#chunk size:  1073741824 bytes
-#time in ms:  1415
-#chunk counter:  1
 
 #-------------------------------------------------------------------------------
 # Main
 #-------------------------------------------------------------------------------
 def main():
     time_begin = current_time_ms();
+
+    current_dir = str(pathlib.Path(__file__).parent.resolve())
+    print("currentdir: ", current_dir)
+
+    xml_file_in = current_dir + "\\..\\test\\" + input_file_name
+    xml_file_out = current_dir + "\\" + input_file_name + ".output"
+    print("xml_file_in: ", xml_file_in)
+    print("xml_file_out: ", xml_file_out)
 
     file_in = open(xml_file_in, mode="r", encoding="utf-8", newline="\n")
     file_out = open(xml_file_out, mode="w", encoding="utf-8", newline="\n")
@@ -42,7 +36,6 @@ def main():
     time_end = current_time_ms();
     print("time in ms: ", time_end - time_begin)
     print("chunk counter: ", chunk_counter)
-
 
 
 #-------------------------------------------------------------------------------
