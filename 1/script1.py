@@ -7,6 +7,10 @@ input_file_name = "test2_formated.xml"
 #input_file_name = "Neuffen_unbearbeitet.osm"
 #input_file_name = "andorra-latest.osm"
 
+#TODO: 
+# - remove blank at element angle-bracket  e.g. <tag k="building" v="yes" /> (save one byte per line)
+# - use linux line endings (save one byte per line)
+
 
 #-------------------------------------------------------------------------------
 # Classes
@@ -108,7 +112,7 @@ def remove_buildings(root):
 
     timer.print_result()
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 # Remove all first level elements for the given "element_name" and the given "id" 
 # attribute value.
 def remove_element_by_id(root, element_name, id):
@@ -348,7 +352,7 @@ def number_of_relation_references(root, id):
 def number_of_way_references(root, id):
     return len(root.findall("way/nd/[@ref='" + id + "']"))
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def remove_subelement_wildcard(root, element_name, subelement_name, k_attribute_wildcard):
     timer = Timer("remove_subelement_wildcard")
     for element in root.findall(element_name):
@@ -363,7 +367,7 @@ def format_input_file(tree):
     write_outputfile_file(tree)
     timer.print_result()
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
     timer = Timer("remove_elements_by_subelement")
     for element in root.findall(element_name):
@@ -371,7 +375,7 @@ def remove_elements_by_subelement(root, element_name, subelement_name, k_attribu
             root.remove(element)
     timer.print_result()
     
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def remove_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
     timer = Timer("remove_subelement")
     for element in root.findall(element_name):
@@ -380,7 +384,7 @@ def remove_subelement(root, element_name, subelement_name, k_attribute, v_attrib
                 element.remove(subelement)
     timer.print_result()
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def remove_attribute_from_element(root, target_attribute):
     timer = Timer("remove_attribute_from_element")
     x_path = "./*[@" + target_attribute + "]"
@@ -389,7 +393,7 @@ def remove_attribute_from_element(root, target_attribute):
         del element.attrib[target_attribute]
     timer.print_result()
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def remove_attributes_from_element(root, target_attributes):
     timer = Timer("remove_attributes_from_element")
     for target_attribute in target_attributes:
