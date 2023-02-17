@@ -1,11 +1,16 @@
+"""
+Program to remove unwanted elements from XML.
+(processes the whole input XML-file)
+"""
+
 import xml.etree.ElementTree as ET
 import time
 import pathlib
 
 
-input_file_name = "test2_formated.xml"
-#input_file_name = "Neuffen_unbearbeitet.osm"
-#input_file_name = "andorra-latest.osm"
+INPUT_FILE_NAME = "test2_formated.xml"
+#INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
+#INPUT_FILE_NAME = "andorra-latest.osm"
 
 #TODO:
 # - remove blank at element angle-bracket
@@ -65,8 +70,8 @@ def main():
     current_dir = str(pathlib.Path(__file__).parent.resolve())
     print("current_dir: ", current_dir)
 
-    xml_file_in = current_dir + "\\..\\test\\" + input_file_name
-    xml_file_out = current_dir + "\\" + input_file_name + ".output"
+    xml_file_in = current_dir + "\\..\\test\\" + INPUT_FILE_NAME
+    xml_file_out = current_dir + "\\" + INPUT_FILE_NAME + ".output"
     print("xml_file_in: ", xml_file_in)
     print("xml_file_out: ", xml_file_out)
 
@@ -173,7 +178,7 @@ def attributes_contained_in_subelement_k(element, subelement_name, k_attribute):
     result = False
 
     for subelement in element.findall(subelement_name):
-        if (subelement.attrib.get("k") == k_attribute):
+        if subelement.attrib.get("k") == k_attribute:
             result = True
             break
 
@@ -317,7 +322,7 @@ def remove_node_elements_with_no_reference(root, print_removed_elements=False):
         counter_nodes = counter_nodes + 1
 
         # this information costs performance!
-        if (counter_nodes % 1000==0):
+        if counter_nodes % 1000==0:
             print(counter_nodes, "nodes processed in", timer.current_time_ms() - timer.get_begin_time_ms(), "ms")
 
         id = element.attrib.get("id")
@@ -358,7 +363,7 @@ def remove_subelement_wildcard(root, element_name, subelement_name, k_attribute_
     timer = Timer("remove_subelement_wildcard")
     for element in root.findall(element_name):
         for subelement in element.findall(subelement_name):
-            if (k_attribute_wildcard in subelement.attrib.get("k")):
+            if k_attribute_wildcard in subelement.attrib.get("k"):
                 element.remove(subelement)
     timer.print_result()
 
@@ -381,7 +386,8 @@ def remove_subelement(root, element_name, subelement_name, k_attribute, v_attrib
     timer = Timer("remove_subelement")
     for element in root.findall(element_name):
         for subelement in element.findall(subelement_name):
-            if (subelement.attrib.get("k") == k_attribute) and (subelement.attrib.get("v") == v_attribute):
+            if (subelement.attrib.get("k") == k_attribute) and \
+                (subelement.attrib.get("v") == v_attribute):
                 element.remove(subelement)
     timer.print_result()
 
