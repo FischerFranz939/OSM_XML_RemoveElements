@@ -1,6 +1,34 @@
 """
 Program to remove unwanted elements from XML.
 (processes the whole input XML-file)
+
+-------------------------------------------------------------------------------
+ Naming, Notes...
+-------------------------------------------------------------------------------
+<ROOT_ELEMENT_NAME                  ATTRIBUTE_NAME=ATTRIBUTE_VALUE>
+    <FIRST_LEVEL_ELEMENT_NAME       ATTRIBUTE_1="123" ATTRIBUTE_2="hello">
+        <SECOND_LEVEL_ELEMENT_NAME  ATTRIBUTE_1="123" ATTRIBUTE_2="hello"> />
+    </node>
+</osm>
+
+ROOT_ELEMENT_NAME is osm
+FIRST_LEVEL_ELEMENT_NAME can be node, way, relation...
+The SECOND_LEVEL_ELEMENT is a subelement from the FIRST_LEVEL_ELEMENT
+
+For simplification, the first level element will be (mostly) called just "element"
+and the second level element will be (mostly) called "subelement" (of the
+first level element).
+
+Note:
+working with xpath...there ist no "get_parent()" function to get the parent
+element of a subelement!
+
+-------------------------------------------------------------------------------
+TODOs:
+-------------------------------------------------------------------------------
+ - remove blank at element angle-bracket
+   e.g. <tag k="building" v="yes" /> (save one byte per line)
+ - use linux line endings (save one byte per line)
 """
 
 import xml.etree.ElementTree as ET
@@ -12,15 +40,10 @@ INPUT_FILE_NAME = "test2_formated.xml"
 #INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
 #INPUT_FILE_NAME = "andorra-latest.osm"
 
-#TODO:
-# - remove blank at element angle-bracket
-#   e.g. <tag k="building" v="yes" /> (save one byte per line)
-# - use linux line endings (save one byte per line)
 
-
-#-------------------------------------------------------------------------------
-# Classes
-#-------------------------------------------------------------------------------
+"""
+Timer for performance measurements
+"""
 class Timer:
     function_name = ""
     time_begin = 0
@@ -40,33 +63,16 @@ class Timer:
         print(self.function_name, " in ms:", time_end - self.time_begin, additional_information)
 
 
-#-------------------------------------------------------------------------------
-# Naming, Notes...
-#-------------------------------------------------------------------------------
-# <ROOT_ELEMENT_NAME             ATTRIBUTE_NAME=ATTRIBUTE_VALUE>
-#  <FIRST_LEVEL_ELEMENT_NAME     ATTRIBUTE_1="123" ATTRIBUTE_2="hello">
-#    <SECOND_LEVEL_ELEMENT_NAME  ATTRIBUTE_1="123" ATTRIBUTE_2="hello"> />
-#  </node>
-# </osm>
-#
-# ROOT_ELEMENT_NAME is osm
-# FIRST_LEVEL_ELEMENT_NAME can be node, way, relation...
-# The SECOND_LEVEL_ELEMENT is a subelement from the FIRST_LEVEL_ELEMENT
-#
-# For simplification, the first level element will be (mostly) called just "element"
-# and the second level element will be (mostly) called "subelement" (of the
-# first level element).
-#
-# Note:
-# working with xpath...there ist no "get_parent()" function to get the parent
-# element of a subelement!
+
 
 
 #-------------------------------------------------------------------------------
 # Main
 #-------------------------------------------------------------------------------
+"""
+Configure elements to remove
+"""
 def main():
-
     current_dir = str(pathlib.Path(__file__).parent.resolve())
     print("current_dir: ", current_dir)
 
@@ -100,12 +106,14 @@ def main():
 #-------------------------------------------------------------------------------
 # Functions
 #-------------------------------------------------------------------------------
-# Get all "way" elements where the subelement name is "tag" and the subelement
-# attribute "k" is "building".
-# Get the referenced node IDs for this building (subelement name is "nd" and subelement
-# attribute is "ref").
-# Remove not referenced "node" elements.
-# Remove this element ("way").
+"""
+Get all "way" elements where the subelement name is "tag" and the subelement
+attribute "k" is "building".
+Get the referenced node IDs for this building (subelement name is "nd" and subelement
+attribute is "ref").
+Remove not referenced "node" elements.
+Remove this element ("way").
+"""
 def remove_buildings(root):
     timer = Timer("remove_buildings")
 
@@ -119,22 +127,28 @@ def remove_buildings(root):
     timer.print_result()
 
 #-------------------------------------------------------------------------------test
-# Remove all first level elements for the given "element_name" and the given "id"
-# attribute value.
+"""
+Remove all first level elements for the given "element_name" and the given "id"
+attribute value.
+"""
 def remove_element_by_id(root, element_name, id):
     for element in root.findall(element_name + "[@id='" + id + "']"):
         root.remove(element)
 
 #-------------------------------------------------------------------------------
-# Check for each node element ID whether the ID is part of a "relation" or a "way".
-# If the node is not referenced, remove the node element.
+"""
+Check for each node element ID whether the ID is part of a "relation" or a "way".
+If the node is not referenced, remove the node element.
+"""
 def remove_nodes_if_not_referenced(root, node_ids):
     for node_id in node_ids:
         if not is_node_id_referenced(root, node_id):
             remove_element_by_id(root, "node", node_id)
 
 #-------------------------------------------------------------------------------
-# Check if the node element ID is part of a "relation" or a "way".
+"""
+Check if the node element ID is part of a "relation" or a "way".
+"""
 def is_node_id_referenced(root, node_id):
     result = False
 
@@ -147,8 +161,10 @@ def is_node_id_referenced(root, node_id):
     return result
 
 #-------------------------------------------------------------------------------
-# Get a list of "ref" attribute values for all, with subelement_name specified,
-# subelements of the given element
+"""
+Get a list of "ref" attribute values for all, with subelement_name specified,
+subelements of the given element
+"""
 def get_element_references(element, subelement_name):
     references = []
 
@@ -158,8 +174,10 @@ def get_element_references(element, subelement_name):
     return references
 
 #-------------------------------------------------------------------------------
-# Check whether a first level element contains a subelement with the given values
-# for the attribute "k" and "v".
+"""
+Check whether a first level element contains a subelement with the given values
+for the attribute "k" and "v".
+"""
 def attributes_contained_in_subelement_kv(element, subelement_name, k_attribute, v_attribute):
     result = False
 
@@ -172,8 +190,10 @@ def attributes_contained_in_subelement_kv(element, subelement_name, k_attribute,
     return result
 
 #-------------------------------------------------------------------------------
-# Check whether a first level element contains a subelement with the given value
-# for the attribute "k".
+"""
+Check whether a first level element contains a subelement with the given value
+for the attribute "k".
+"""
 def attributes_contained_in_subelement_k(element, subelement_name, k_attribute):
     result = False
 
@@ -185,9 +205,11 @@ def attributes_contained_in_subelement_k(element, subelement_name, k_attribute):
     return result
 
 #-------------------------------------------------------------------------------
-# Get all first level elements "node", "way" and "relation" with negativ IDs.
-# Negate the ID.
-# Replace action="modify" with version="1".
+"""
+Get all first level elements "node", "way" and "relation" with negativ IDs.
+Negate the ID.
+Replace action="modify" with version="1".
+"""
 def adapt_elements_with_negative_id(root):
     timer = Timer("adapt_elements_with_negative_id")
 
@@ -195,9 +217,9 @@ def adapt_elements_with_negative_id(root):
 
     for element_name in element_names:
         for element in root.findall(element_name):
-            id = int(element.attrib.get("id"))
-            if id < 0:
-                element.set("id", str(id * -1))
+            attrib_id = int(element.attrib.get("id"))
+            if attrib_id < 0:
+                element.set("id", str(attrib_id * -1))
                 if element.attrib.get("action") == "modify":
                     element.set("version", "1")
                     del element.attrib["action"]
@@ -205,10 +227,12 @@ def adapt_elements_with_negative_id(root):
     timer.print_result()
 
 #-------------------------------------------------------------------------------
-# Get all first level elements "way" and "relation" with negativ references in their
-# subelements.
-# Negate the ID.
-# For ways also remove the attribute "action".
+"""
+Get all first level elements "way" and "relation" with negativ references in their
+subelements.
+Negate the ID.
+For ways also remove the attribute "action".
+"""
 def adapt_subelements_with_negative_references(root):
     timer = Timer("adapt_subelements_with_negative_references")
 
@@ -227,7 +251,9 @@ def adapt_subelements_with_negative_references(root):
     timer.print_result()
 
 #-------------------------------------------------------------------------------
-# Negate negative reference IDs for the given xpath.
+"""
+Negate negative reference IDs for the given xpath.
+"""
 def change_negative_references_to_positive(root, x_path):
     for element in root.findall(x_path):
         id = int(element.attrib.get("ref"))
@@ -236,28 +262,29 @@ def change_negative_references_to_positive(root, x_path):
             #print(element.attrib["ref"])
 
 #-------------------------------------------------------------------------------
-# Results for andorra-latest.osm
-#
-# find relation reference for ONE node id --> ca.  30ms
-# find way      reference for ONE node id --> ca. 100ms
-#
-# find ALL nodes and check for exceptions --> ca. 160ms
-# number of checked nodes:     329767
-# number of not removed nodes: 228
-#
-# => 329767 * (30+100)ms = 11,9h
-#
-# calculated:
-# --> 1000 * (30+100)ms = 130000 ms (2m 10s)
-# program output:
-# 1000 nodes processed in 113689 ms
-# 2000 nodes processed in 231838 ms
-# 3000 nodes processed in 352840 ms
-# 4000 nodes processed in 470426 ms
-# 5000 nodes processed in 588397 ms
-#
-# !!!! Python kann nur eine CPU nutzen !!!!
-#
+"""
+Results for andorra-latest.osm
+
+find relation reference for ONE node id --> ca.  30ms
+find way      reference for ONE node id --> ca. 100ms
+
+find ALL nodes and check for exceptions --> ca. 160ms
+number of checked nodes:       329767
+number of nodes not to remove: 228
+
+=> 329767 * (30+100)ms = 11,9h
+
+calculated:
+--> 1000 * (30+100)ms = 130000 ms (2m 10s)
+program output:
+1000 nodes processed in 113689 ms
+2000 nodes processed in 231838 ms
+3000 nodes processed in 352840 ms
+4000 nodes processed in 470426 ms
+5000 nodes processed in 588397 ms
+
+!!!! Python kann nur eine CPU nutzen !!!!
+"""
 def performance_remove_node_elements_with_no_reference(root):
     timer = Timer("performance_remove_node_elements_with_no_reference")
 
@@ -278,6 +305,10 @@ def performance_remove_node_elements_with_no_reference(root):
     timer.print_result()
 
 #-------------------------------------------------------------------------------
+"""
+count all nodes and all nodes which can not be removed
+criteria can be e.g. attributes in tags
+"""
 def performance_find_all_nodes(root):
     timer = Timer("performance_find_all_nodes")
 
@@ -291,8 +322,8 @@ def performance_find_all_nodes(root):
             counter_not_remove = counter_not_remove + 1
             print("node can NOT be removed. id: ", id)
 
-    print("  number of checked nodes:    ", counter_nodes)
-    print("  number of not removed nodes:", counter_not_remove)
+    print("  number of checked nodes:      ", counter_nodes)
+    print("  number of nodes not to remove:", counter_not_remove)
 
     timer.print_result()
 
@@ -323,7 +354,8 @@ def remove_node_elements_with_no_reference(root, print_removed_elements=False):
 
         # this information costs performance!
         if counter_nodes % 1000==0:
-            print(counter_nodes, "nodes processed in", timer.current_time_ms() - timer.get_begin_time_ms(), "ms")
+            print(counter_nodes, "nodes processed in", timer.current_time_ms() - \
+            timer.get_begin_time_ms(), "ms")
 
         id = element.attrib.get("id")
         if can_node_be_removed(element) and not is_node_id_referenced(root, id):
@@ -332,12 +364,16 @@ def remove_node_elements_with_no_reference(root, print_removed_elements=False):
             if print_removed_elements:
                 print("  no references, exceptions for id:", id, " =>element removed")
 
-    print("  number of checked nodes", counter_nodes)
-    print("  number of removed nodes", counter_remove_nodes)
+    print("  number of checked nodes:      ", counter_nodes)
+    print("  number of nodes not to remove:", counter_remove_nodes)
 
     timer.print_result()
 
 #-------------------------------------------------------------------------------
+"""
+check if a node can be removed or not 
+criteria can be e.g. attributes in tags
+"""
 def can_node_be_removed(element):
     result = True
 
@@ -423,4 +459,3 @@ def parse_input_file(file_in):
 #-------------------------------------------------------------------------------
 if __name__== "__main__":
     main()
-
