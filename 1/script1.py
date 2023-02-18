@@ -1,6 +1,6 @@
 '''
-Program to remove unwanted elements from XML.
-(processes the whole input XML-file)
+Script to remove unwanted elements/attributes from XML.
+- processes the whole input XML-file)
 
 -------------------------------------------------------------------------------
  Naming, Notes...
@@ -30,7 +30,6 @@ TODOs:
    e.g. <tag k="building" v="yes" /> (save one byte per line)
  - use linux line endings (save one byte per line)
 '''
-
 import xml.etree.ElementTree as ET
 import time
 import pathlib
@@ -50,20 +49,20 @@ class Timer:
     time_begin = 0
 
     def __init__(self, function_name):
-        """Init method"""        
+        """Init method"""
         self.function_name = function_name
         self.time_begin = self.current_time_ms()
 
     def begin_time_ms(self):
-        """Begin time"""        
+        """Begin time"""
         return self.time_begin
 
     def current_time_ms(self):
-        """Get current time"""        
+        """Get current time"""
         return round(time.time() * 1000)
 
     def print_result(self, additional_information=""):
-        """Print result"""        
+        """Print result"""
         time_end = self.current_time_ms()
         print(self.function_name, " in ms:", time_end - self.time_begin, additional_information)
 
@@ -368,7 +367,7 @@ def remove_node_elements_with_no_reference(root, print_removed_elements=False):
 #-------------------------------------------------------------------------------
 def can_node_be_removed(element):
     '''
-    Check if a node can be removed or not. 
+    Check if a node can be removed or not.
     Criteria can be e.g. attributes in tags
     '''
     result = True

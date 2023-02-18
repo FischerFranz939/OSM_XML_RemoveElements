@@ -1,25 +1,36 @@
-# https://pythontest.com/framework/pytest/pytest-introduction/
-# python.exe -m pytest -v d:/MeineProgramme/OSM_XML_RemoveElements/1/test_script1.py
+'''
+Test script for script1
+
+https://pythontest.com/framework/pytest/pytest-introduction/
+python.exe -m pytest -v d:/MeineProgramme/OSM_XML_RemoveElements/1/test_script1.py
+'''
 import xml.etree.ElementTree as ET
-from script1 import *
+from script1 import remove_element_by_id
+from script1 import remove_attribute_from_element
+from script1 import remove_attributes_from_element
+from script1 import remove_subelement
+from script1 import remove_elements_by_subelement
+from script1 import remove_subelement_by_wildcard
 
 
 #-------------------------------------------------------------------------------
 # Functions
 #-------------------------------------------------------------------------------
-def print_xmls(input, output, expected):
+def print_xmls(xml_in, xml_out, xml_expected):
+    '''Print in, out and expected'''
     print("xml_in:")
-    print(input)
+    print(xml_in)
     print("xml_out:")
-    print(output)
+    print(xml_out)
     print("xml_expected:")
-    print(expected)
+    print(xml_expected)
 
 
 #-------------------------------------------------------------------------------
 # Tests
 #-------------------------------------------------------------------------------
 def test_remove_element_by_id():
+    '''Test - remove_element_by_id'''
 # Given
     xml_in = """<body>
     <bounds minlat='48.5297218' minlon='9.3489575' maxlat='48.5378919' maxlon='9.3748784' origin='CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)' />
@@ -36,19 +47,20 @@ def test_remove_element_by_id():
 
     root         = ET.fromstring(xml_in)
     element_name = "node"
-    id           = "60117350"
+    identifier   = "60117350"
 
 # When
-    remove_element_by_id(root, element_name, id)
+    remove_element_by_id(root, element_name, identifier)
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
     print_xmls(xml_in, xml_out,xml_expected)
     #assert False
-    assert (xml_expected == xml_out)
+    assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
 def test_remove_attribute_from_element():
+    '''Test - remove_attribute_from_element'''
 # Given
     xml_in = """<body>
     <bounds minlat='48.5297218' minlon='9.3489575' maxlat='48.5378919' maxlon='9.3748784' origin='CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)' />
@@ -74,10 +86,11 @@ def test_remove_attribute_from_element():
 # Then
     print_xmls(xml_in, xml_out,xml_expected)
     #assert False
-    assert (xml_expected == xml_out)
+    assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
 def test_remove_attributes_from_element():
+    '''Test - remove_attributes_from_element'''
 # Given
     xml_in = """<body>
     <bounds minlat='48.5297218' minlon='9.3489575' maxlat='48.5378919' maxlon='9.3748784' origin='CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)' />
@@ -103,10 +116,11 @@ def test_remove_attributes_from_element():
 # Then
     print_xmls(xml_in, xml_out,xml_expected)
     #assert False
-    assert (xml_expected == xml_out)
+    assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
 def test_remove_subelement():
+    '''Test - remove_subelement'''
     # Given
     xml_in = """<body>
     <node id='251665776' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='5' changeset='40311689' lat='48.5314869' lon='9.3497587' />
@@ -138,10 +152,11 @@ def test_remove_subelement():
 # Then
     print_xmls(xml_in, xml_out,xml_expected)
     #assert False
-    assert (xml_expected == xml_out)
+    assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
 def test_remove_elements_by_subelement():
+    '''Test - remove_elements_by_subelement'''
     # Given
     xml_in = """<body>
     <node id='251665776' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='5' changeset='40311689' lat='48.5314869' lon='9.3497587' />
@@ -171,12 +186,13 @@ def test_remove_elements_by_subelement():
 # Then
     print_xmls(xml_in, xml_out,xml_expected)
     #assert False
-    assert (xml_expected == xml_out)
+    assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
-def test_remove_subelement_wildcard():
+def test_remove_subelement_by_wildcard():
+    '''Test - remove_subelement_by_wildcard'''
     # Given
-    #TODO: v='Pica d&apos;Estats' vs v="Pica d'Estats"
+    #Note: v='Pica d&apos;Estats' vs v="Pica d'Estats"
     xml_in = """<body>
     <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
         <tag k="name" v="Pica d&apos;Estats"/>
@@ -229,4 +245,4 @@ def test_remove_subelement_wildcard():
 # Then
     print_xmls(xml_in, xml_out,xml_expected)
     #assert False
-    assert (xml_expected == xml_out)
+    assert xml_expected == xml_out

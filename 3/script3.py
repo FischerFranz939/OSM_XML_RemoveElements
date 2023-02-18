@@ -1,13 +1,22 @@
+'''
+Script to remove unwanted elements/attributes from XML.
+- processes element by element of the input XML-file
+- currently: "only" count elements
+- only operations per element are possible
+'''
 import xml.etree.ElementTree as ET
 import pathlib
 
 
-input_file_name = "test3.xml"
-#input_file_name = "andorra-latest.osm"
+INPUT_FILE_NAME = "test3.xml"
+#INPUT_FILE_NAME = "andorra-latest.osm"
 
 
 #-------------------------------------------------------------------------------
+# Functions
+#-------------------------------------------------------------------------------
 def getelements(xml_file_in, tag):
+    '''Get elements'''
     context = iter(ET.iterparse(xml_file_in, events=('start', 'end')))
     _, root = next(context) # get root element
     for event, elem in context:
@@ -22,8 +31,8 @@ def getelements(xml_file_in, tag):
 current_dir = str(pathlib.Path(__file__).parent.resolve())
 print("current_dir: ", current_dir)
 
-xml_file_in = current_dir + "\\..\\test\\" + input_file_name
-xml_file_out = current_dir + "\\" + input_file_name + ".output"
+xml_file_in = current_dir + "\\..\\test\\" + INPUT_FILE_NAME
+xml_file_out = current_dir + "\\" + INPUT_FILE_NAME + ".output"
 print("xml_file_in: ", xml_file_in)
 print("xml_file_out: ", xml_file_out)
 
