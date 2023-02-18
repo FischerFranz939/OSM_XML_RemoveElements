@@ -4,7 +4,7 @@ import pathlib
 
 input_file_name = "test2.xml"
 #input_file_name = "andorra-latest.osm"
-CHUNK_SIZE = 5000 #configure CHUNK_SIZE (data read at a time) based on your system RAM. 
+CHUNK_SIZE = 5000 #configure CHUNK_SIZE (data read at a time) based on your system RAM.
 
 
 #-------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ def main():
 
     #1
     #chunk_counter = process_lines_from_file(file_in, file_out, chunk_size=CHUNK_SIZE, callback=process_timestamps)
-    
+
     #2
     chunk_counter = process_lines_from_file(file_in, file_out, chunk_size=CHUNK_SIZE, callback=process_tags)
 
@@ -69,7 +69,7 @@ def write_tag(data):
     keep_name_tags = ["de", "en", "sv", "fi", "no"]
     write_data = True
     tag_found = False
-    
+
     if is_subelement_tag(data):
         # check for tags to remove
         for tag in remove_tags:
@@ -77,7 +77,7 @@ def write_tag(data):
                 tag_found = True
                 write_data = False
                 break
-    
+
         # check for name-tags to keep
         if not tag_found and is_name_tag(data):
             for tag in keep_name_tags:
@@ -102,7 +102,7 @@ def target_found(data, tag, k_name = ""):
     if index1 > 0 or index2 > 0:
         found = True
         #print('<tag k="' + k_name + tag)
-        
+
     return found
 
 #-------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ def is_subelement_tag(data):
     if index > 0:
         is_tag = True
     return is_tag
-    
+
 #-------------------------------------------------------------------------------
 def remove_timestamp_from_string(data):
     target = " timestamp" #search including the blanc!
@@ -125,7 +125,7 @@ def remove_timestamp_from_string(data):
 #-------------------------------------------------------------------------------
 def read_in_chunks(file_obj, chunk_size=5000):
     print("chunk size: ", chunk_size, "bytes")
-    
+
     while True:
         data = file_obj.read(chunk_size)
         if not data:
@@ -145,7 +145,7 @@ def process_lines_from_file(file_in, file_out, chunk_size, callback, return_whol
     # loop through characters
     for chunk in read_in_chunks(file_in, chunk_size):
         chunk_counter = chunk_counter + 1
-        
+
         # if uncompleted data exists
         if data_left_over:
             # print('\n left over found')
@@ -181,11 +181,11 @@ def process_lines_from_file(file_in, file_out, chunk_size, callback, return_whol
 
     callback(data=None, eof=True, file_out=file_out)
     return chunk_counter
-    
+
 #-------------------------------------------------------------------------------
 def current_time_ms():
     return round(time.time() * 1000)
-    
+
 #-------------------------------------------------------------------------------
 if __name__== "__main__":
     main()

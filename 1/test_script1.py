@@ -1,7 +1,7 @@
 # https://pythontest.com/framework/pytest/pytest-introduction/
 # python.exe -m pytest -v d:/MeineProgramme/OSM_XML_RemoveElements/1/test_script1.py
 import xml.etree.ElementTree as ET
-from script1 import * 
+from script1 import *
 
 
 #-------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ def test_remove_element_by_id():
     <node id="31287590" timestamp="2016-07-06T01:21:43Z" uid="548288" user="WayneSchlegel" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
     <node id="60117351" timestamp="2016-07-06T01:22:11Z" uid="548288" user="WayneSchlegel" visible="true" version="14" changeset="40512409" lat="48.5249231" lon="9.3488887" />
     </body>"""
-    
+
     root         = ET.fromstring(xml_in)
     element_name = "node"
     id           = "60117350"
@@ -63,7 +63,7 @@ def test_remove_attribute_from_element():
     <node id="60117350" uid="548288" user="WayneSchlegel" visible="true" version="15" changeset="40512409" lat="48.5243657" lon="9.3493966" />
     <node id="60117351" uid="548288" user="WayneSchlegel" visible="true" version="14" changeset="40512409" lat="48.5249231" lon="9.3488887" />
     </body>"""
-    
+
     root             = ET.fromstring(xml_in)
     target_attribute = "timestamp"
 
@@ -92,7 +92,7 @@ def test_remove_attributes_from_element():
     <node id="60117350" timestamp="2016-07-06T01:22:11Z" visible="true" version="15" changeset="40512409" lat="48.5243657" lon="9.3493966" />
     <node id="60117351" timestamp="2016-07-06T01:22:11Z" visible="true" version="14" changeset="40512409" lat="48.5249231" lon="9.3488887" />
     </body>"""
-    
+
     root                  = ET.fromstring(xml_in)
     target_attribute_list = ["user", "uid"]
 
@@ -130,7 +130,7 @@ def test_remove_subelement():
     subelement_name = "tag"
     k_attribute     = "power"
     v_attribute     = "tower"
-    
+
 # When
     remove_subelement(root, element_name, subelement_name, k_attribute, v_attribute)
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
@@ -163,7 +163,7 @@ def test_remove_elements_by_subelement():
     subelement_name = "tag"
     k_attribute     = "power"
     v_attribute     = "tower"
-    
+
 # When
     remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
@@ -221,7 +221,7 @@ def test_remove_subelement_wildcard():
     element_name         = "node"
     subelement_name      = "tag"
     k_attribute_wildcard = "wiki"
-    
+
 # When
     remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribute_wildcard)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
