@@ -50,16 +50,20 @@ class Timer:
     time_begin = 0
 
     def __init__(self, function_name):
+        """Init method"""        
         self.function_name = function_name
         self.time_begin = self.current_time_ms()
 
     def begin_time_ms(self):
+        """Begin time"""        
         return self.time_begin
 
     def current_time_ms(self):
+        """Get current time"""        
         return round(time.time() * 1000)
 
     def print_result(self, additional_information=""):
+        """Print result"""        
         time_end = self.current_time_ms()
         print(self.function_name, " in ms:", time_end - self.time_begin, additional_information)
 
@@ -87,7 +91,7 @@ def main():
     #remove_subelement(root, "node", "tag", "power", "tower")
     #remove_elements_by_subelement(root, "node", "tag", "power", "tower")
     #remove_elements_by_subelement(root, "way", "tag", "building", "yes")
-    #remove_subelement_wildcard(root, "node", "tag", "wiki")
+    #remove_subelement_by_wildcard(root, "node", "tag", "wiki")
 
     #remove_node_elements_with_no_reference(root, True)
     #performance_remove_node_elements_with_no_reference(root)
@@ -112,14 +116,12 @@ def remove_buildings(root):
     Remove this element ("way").
     '''
     timer = Timer("remove_buildings")
-
     for element in root.findall("way"):
         if attributes_contained_in_subelement_k(element, "tag", "building"):
             references = get_element_references(element, "nd")
             references.pop() #remove last list-element, because first and last are the same
             root.remove(element) #remove, otherwise the nodes are still referenced
             remove_nodes_if_not_referenced(root, references)
-
     timer.print_result()
 
 #-------------------------------------------------------------------------------test
@@ -248,9 +250,9 @@ def adapt_subelements_with_negative_references(root):
 def change_negative_references_to_positive(root, x_path):
     '''Negate negative reference IDs for the given xpath'''
     for element in root.findall(x_path):
-        id = int(element.attrib.get("ref"))
+        identifier = int(element.attrib.get("ref"))
         if id < 0:
-            element.set("ref", str(id * -1))
+            element.set("ref", str(identifier * -1))
             #print(element.attrib["ref"])
 
 #-------------------------------------------------------------------------------
@@ -288,9 +290,9 @@ def performance_remove_node_elements_with_no_reference(root):
     performance_number_of_way_references(root, node_id_ref_way, "ref_way")
     performance_number_of_way_references(root, node_id_ref_rel, "ref_rel")
 
-    performance_number_of_relation_references(root, node_id_no_ref,  "no_ref ")
-    performance_number_of_relation_references(root, node_id_ref_way, "ref_way")
-    performance_number_of_relation_references(root, node_id_ref_rel, "ref_rel")
+    performance_number_of_relation_references(root, node_id_no_ref)
+    performance_number_of_relation_references(root, node_id_ref_way)
+    performance_number_of_relation_references(root, node_id_ref_rel)
 
     performance_find_all_nodes(root)
 
@@ -308,11 +310,11 @@ def performance_find_all_nodes(root):
     counter_not_remove = 0
     for element in root.findall("node"):
         counter_nodes = counter_nodes + 1
-        id = element.attrib.get("id")
+        identifier = element.attrib.get("id")
         remove = can_node_be_removed(element)
         if not remove:
             counter_not_remove = counter_not_remove + 1
-            print("node can NOT be removed. id: ", id)
+            print("node can NOT be removed. id: ", identifier)
 
     print("  number of checked nodes:      ", counter_nodes)
     print("  number of nodes not to remove:", counter_not_remove)
@@ -320,25 +322,28 @@ def performance_find_all_nodes(root):
     timer.print_result()
 
 #-------------------------------------------------------------------------------
-def performance_number_of_relation_references(root, id, type):
+def performance_number_of_relation_references(root, identifier):
+    '''performance measurement - get number of relation references'''
     timer = Timer("performance_number_of_relation_references")
-    number = number_of_relation_references(root, id)
+    number = number_of_relation_references(root, identifier)
     timer.print_result(create_key_value_string("found references", number))
 
 #-------------------------------------------------------------------------------
-def performance_number_of_way_references(root, id, type):
+def performance_number_of_way_references(root, identifier):
+    '''Performance measurement - get number of way references'''
     timer = Timer("performance_number_of_way_references")
-    number = number_of_way_references(root, id)
+    number = number_of_way_references(root, identifier)
     timer.print_result(create_key_value_string("found references", number))
 
 #-------------------------------------------------------------------------------
 def create_key_value_string(text, int_value):
+    '''Create key value string'''
     return "("+ text +": " + str(int_value) + ")"
 
 #-------------------------------------------------------------------------------
 def remove_node_elements_with_no_reference(root, print_removed_elements=False):
+    '''Remove node elements with no reference'''
     timer = Timer("remove_node_elements_with_no_reference")
-
     counter_nodes = 0
     counter_remove_nodes = 0
     for element in root.findall("node"):
@@ -358,12 +363,14 @@ def remove_node_elements_with_no_reference(root, print_removed_elements=False):
 
     print("  number of checked nodes:      ", counter_nodes)
     print("  number of nodes not to remove:", counter_remove_nodes)
-
     timer.print_result()
 
 #-------------------------------------------------------------------------------
 def can_node_be_removed(element):
-    '''check if a node can be removed or not. criteria can be e.g. attributes in tags'''
+    '''
+    Check if a node can be removed or not. 
+    Criteria can be e.g. attributes in tags
+    '''
     result = True
 
     # check for exceptions
@@ -377,15 +384,18 @@ def can_node_be_removed(element):
 
 #-------------------------------------------------------------------------------
 def number_of_relation_references(root, identifier):
+    '''Get number of relation references'''
     return len(root.findall("relation/member/[@ref='" + identifier + "']"))
 
 #-------------------------------------------------------------------------------
 def number_of_way_references(root, identifier):
+    '''Get number of way references'''
     return len(root.findall("way/nd/[@ref='" + identifier + "']"))
 
 #-------------------------------------------------------------------------------test
-def remove_subelement_wildcard(root, element_name, subelement_name, k_attribute_wildcard):
-    timer = Timer("remove_subelement_wildcard")
+def remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribute_wildcard):
+    '''Remove subelement by wildcard'''
+    timer = Timer("remove_subelement_by_wildcard")
     for element in root.findall(element_name):
         for subelement in element.findall(subelement_name):
             if k_attribute_wildcard in subelement.attrib.get("k"):
@@ -394,12 +404,14 @@ def remove_subelement_wildcard(root, element_name, subelement_name, k_attribute_
 
 #-------------------------------------------------------------------------------
 def format_input_file(tree, file_out):
+    '''Format input file'''
     timer = Timer("format_input_file")
     write_outputfile_file(tree, file_out)
     timer.print_result()
 
 #-------------------------------------------------------------------------------test
 def remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
+    '''Remove elements by subelement'''
     timer = Timer("remove_elements_by_subelement")
     for element in root.findall(element_name):
         if attributes_contained_in_subelement_kv(element, subelement_name, \
@@ -409,6 +421,7 @@ def remove_elements_by_subelement(root, element_name, subelement_name, k_attribu
 
 #-------------------------------------------------------------------------------test
 def remove_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
+    '''Remove subelement by attributes'''
     timer = Timer("remove_subelement")
     for element in root.findall(element_name):
         for subelement in element.findall(subelement_name):
@@ -419,6 +432,7 @@ def remove_subelement(root, element_name, subelement_name, k_attribute, v_attrib
 
 #-------------------------------------------------------------------------------test
 def remove_attribute_from_element(root, target_attribute):
+    '''Remove attribute from element'''
     timer = Timer("remove_attribute_from_element")
     x_path = "./*[@" + target_attribute + "]"
     for element in root.findall(x_path):
@@ -428,6 +442,7 @@ def remove_attribute_from_element(root, target_attribute):
 
 #-------------------------------------------------------------------------------test
 def remove_attributes_from_element(root, target_attributes):
+    '''Remove attributes from element'''
     timer = Timer("remove_attributes_from_element")
     for target_attribute in target_attributes:
         remove_attribute_from_element(root, target_attribute)
@@ -435,12 +450,14 @@ def remove_attributes_from_element(root, target_attributes):
 
 #-------------------------------------------------------------------------------
 def write_outputfile_file(tree, file_out):
+    '''Export ElementTree object to file'''
     timer = Timer("write_outputfile_file")
     tree.write(file_out, encoding="utf-8", xml_declaration=True)
     timer.print_result()
 
 #-------------------------------------------------------------------------------
 def parse_input_file(file_in):
+    '''Import file to ElementTree object'''
     timer = Timer("parse_input_file")
     tree = ET.parse(file_in)
     timer.print_result()
@@ -448,4 +465,5 @@ def parse_input_file(file_in):
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":
+    '''Main function'''
     main()

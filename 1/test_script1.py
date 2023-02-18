@@ -223,7 +223,7 @@ def test_remove_subelement_wildcard():
     k_attribute_wildcard = "wiki"
     
 # When
-    remove_subelement_wildcard(root, element_name, subelement_name, k_attribute_wildcard)
+    remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribute_wildcard)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
