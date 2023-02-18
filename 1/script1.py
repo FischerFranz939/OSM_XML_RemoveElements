@@ -251,7 +251,7 @@ def change_negative_references_to_positive(root, x_path):
     '''Negate negative reference IDs for the given xpath'''
     for element in root.findall(x_path):
         identifier = int(element.attrib.get("ref"))
-        if id < 0:
+        if identifier < 0:
             element.set("ref", str(identifier * -1))
             #print(element.attrib["ref"])
 
@@ -286,9 +286,9 @@ def performance_remove_node_elements_with_no_reference(root):
     node_id_ref_way = '3020646532' #andorra-latest.osm --> reference to way
     node_id_ref_rel = '766150394'  #andorra-latest.osm --> reference to relation
 
-    performance_number_of_way_references(root, node_id_no_ref,  "no_ref ")
-    performance_number_of_way_references(root, node_id_ref_way, "ref_way")
-    performance_number_of_way_references(root, node_id_ref_rel, "ref_rel")
+    performance_number_of_way_references(root, node_id_no_ref)
+    performance_number_of_way_references(root, node_id_ref_way)
+    performance_number_of_way_references(root, node_id_ref_rel)
 
     performance_number_of_relation_references(root, node_id_no_ref)
     performance_number_of_relation_references(root, node_id_ref_way)
@@ -354,12 +354,12 @@ def remove_node_elements_with_no_reference(root, print_removed_elements=False):
             print(counter_nodes, "nodes processed in", timer.current_time_ms() - \
             timer.get_begin_time_ms(), "ms")
 
-        id = element.attrib.get("id")
-        if can_node_be_removed(element) and not is_node_id_referenced(root, id):
+        identifier = element.attrib.get("id")
+        if can_node_be_removed(element) and not is_node_id_referenced(root, identifier):
             counter_remove_nodes = counter_remove_nodes + 1
             root.remove(element)
             if print_removed_elements:
-                print("  no references, exceptions for id:", id, " =>element removed")
+                print("  no references, exceptions for id:", identifier, " =>element removed")
 
     print("  number of checked nodes:      ", counter_nodes)
     print("  number of nodes not to remove:", counter_remove_nodes)
@@ -465,5 +465,4 @@ def parse_input_file(file_in):
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":
-    '''Main function'''
     main()
