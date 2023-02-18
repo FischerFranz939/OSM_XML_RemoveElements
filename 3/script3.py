@@ -32,12 +32,12 @@ CURRENT_DIR = str(pathlib.Path(__file__).parent.resolve())
 print("CURRENT_DIR: ", CURRENT_DIR)
 
 XML_FILE_IN = CURRENT_DIR + "\\..\\test\\" + INPUT_FILE_NAME
-xml_file_out = CURRENT_DIR + "\\" + INPUT_FILE_NAME + ".output"
+XML_FILE_OUT = CURRENT_DIR + "\\" + INPUT_FILE_NAME + ".output"
 print("XML_FILE_IN: ", XML_FILE_IN)
-print("xml_file_out: ", xml_file_out)
+print("XML_FILE_OUT: ", XML_FILE_OUT)
 
 COUNTER = 0
-with open(xml_file_out, mode="w", encoding="utf-8", newline="\n") as file:
+with open(XML_FILE_OUT, mode="w", encoding="utf-8", newline="\n") as file:
     file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
     file.write("<osm version='0.6' generator='JOSM'>\n  ")
 
