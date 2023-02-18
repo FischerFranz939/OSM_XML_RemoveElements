@@ -44,7 +44,8 @@ def main():
     # chunk_size=CHUNK_SIZE, callback=process_timestamps)
 
     #2
-    chunk_counter = process_lines_from_file(file_in, file_out, chunk_size=CHUNK_SIZE, callback=process_tags)
+    chunk_counter = process_lines_from_file(file_in, file_out, chunk_size=CHUNK_SIZE,
+                                            callback=process_tags)
 
     time_end = current_time_ms()
     print("time in ms: ", time_end - time_begin)
