@@ -5,12 +5,22 @@ https://pythontest.com/framework/pytest/pytest-introduction/
 python.exe -m pytest -v d:/MeineProgramme/OSM_XML_RemoveElements/1/test_script1.py
 '''
 import xml.etree.ElementTree as ET
+import pathlib
+import filecmp
+
+
 from script1 import remove_element_by_id
 from script1 import remove_attribute_from_element
 from script1 import remove_attributes_from_element
 from script1 import remove_subelement
 from script1 import remove_elements_by_subelement
 from script1 import remove_subelement_by_wildcard
+from script1 import parse_input_file
+from script1 import write_outputfile_file
+from script1 import number_of_way_references
+
+
+TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "\\..\\test\\"
 
 
 #-------------------------------------------------------------------------------
@@ -54,7 +64,7 @@ def test_remove_element_by_id():
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
-    print_xmls(xml_in, xml_out,xml_expected)
+    print_xmls(xml_in, xml_out, xml_expected)
     #assert False
     assert xml_expected == xml_out
 
@@ -84,7 +94,7 @@ def test_remove_attribute_from_element():
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
-    print_xmls(xml_in, xml_out,xml_expected)
+    print_xmls(xml_in, xml_out, xml_expected)
     #assert False
     assert xml_expected == xml_out
 
@@ -114,7 +124,7 @@ def test_remove_attributes_from_element():
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
-    print_xmls(xml_in, xml_out,xml_expected)
+    print_xmls(xml_in, xml_out, xml_expected)
     #assert False
     assert xml_expected == xml_out
 
@@ -150,7 +160,7 @@ def test_remove_subelement():
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
-    print_xmls(xml_in, xml_out,xml_expected)
+    print_xmls(xml_in, xml_out, xml_expected)
     #assert False
     assert xml_expected == xml_out
 
@@ -184,7 +194,7 @@ def test_remove_elements_by_subelement():
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
-    print_xmls(xml_in, xml_out,xml_expected)
+    print_xmls(xml_in, xml_out, xml_expected)
     #assert False
     assert xml_expected == xml_out
 
@@ -243,6 +253,90 @@ def test_remove_subelement_by_wildcard():
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
-    print_xmls(xml_in, xml_out,xml_expected)
+    print_xmls(xml_in, xml_out, xml_expected)
     #assert False
     assert xml_expected == xml_out
+
+#-------------------------------------------------------------------------------
+def test_parse_input_file():
+    '''Test - parse_input_file'''
+# Given
+    xml_expected = """<osm version="0.6" generator="JOSM">
+  <node id="31287590" timestamp="2016-07-06T01:21:43Z" uid="548288" user="WayneSchlegel" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
+  <bounds minlat="48.5297218" minlon="9.3489575" maxlat="48.5378919" maxlon="9.3748784" origin="CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)" />
+  <node id="60117358" timestamp="2020-05-05T13:16:49Z" uid="10056196" user="NVBWSeifert" visible="true" version="10" changeset="84698245" lat="48.5278879" lon="9.3443126">
+    <tag k="ele" v="397" />
+    <tag k="name" v="Dettingen Erms Mitte" />
+    <tag k="network" v="Naldo" />
+    <tag k="official_name" v="Dettingen-Mitte" />
+    <tag k="operator" v="Erms-Neckar-Bahn AG" />
+    <tag k="public_transport" v="station" />
+    <tag k="railway" v="halt" />
+    <tag k="railway:ref" v="TDTU" />
+    <tag k="ref:IFOPT" v="de:08415:28235" />
+    <tag k="start_date" v="27.12.1873" />
+    <tag k="uic_ref" v="8070679" />
+    <tag k="wheelchair" v="yes" />
+  </node>
+</osm>"""
+
+    xml_file_in = TEST_PATH + "test3.xml"
+
+# When
+    tree = parse_input_file(xml_file_in)
+    root = tree.getroot()
+    xml_out = ET.tostring(root, encoding="unicode", method="xml")
+
+# Then
+    print_xmls("", xml_out, xml_expected)
+    #assert False
+    assert xml_expected == xml_out
+
+#-------------------------------------------------------------------------------
+def test_write_outputfile_file():
+    '''Test - write_outputfile_file'''
+# Given
+    xml_file_in = TEST_PATH + "test3.xml"
+    xml_file_out = TEST_PATH + "test3.output"
+    xml_file_expected = TEST_PATH + "test3.expected"
+    tree = parse_input_file(xml_file_in)
+
+# When
+    write_outputfile_file(tree, xml_file_out)
+
+# Then
+    result = filecmp.cmp(xml_file_expected, xml_file_out, shallow=False)
+    assert result == True
+
+#-------------------------------------------------------------------------------
+def test_number_of_way_references():
+    '''Test - number_of_way_references'''
+    # Given
+    xml_in = """<body>
+    <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488458" />
+        <nd ref="3747488457" />
+        <nd ref="3747486122" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    <way id="371149333" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3723434116" />
+        <nd ref="3747488458" />
+        <nd ref="3747457057" />
+        <nd ref="3734586122" />
+        <nd ref="3747488821" />
+        <tag k="highway" v="path" />
+    </way>
+    <node id='2739790947' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5316081' lon='9.359028' />
+    </body>"""
+
+    root       = ET.fromstring(xml_in)
+    identifier = "3747488458"
+
+  # When
+    result = number_of_way_references(root, identifier)
+
+# Then
+    assert result == 2

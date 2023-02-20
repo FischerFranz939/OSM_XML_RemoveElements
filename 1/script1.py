@@ -33,6 +33,7 @@ TODOs:
 import xml.etree.ElementTree as ET
 import time
 import pathlib
+import io
 
 
 INPUT_FILE_NAME = "test2_formated.xml"
@@ -75,18 +76,17 @@ def main():
     current_dir = str(pathlib.Path(__file__).parent.resolve())
     print("current_dir: ", current_dir)
 
-    xml_file_in = current_dir + "\\..\\test\\" + INPUT_FILE_NAME
-    xml_file_out = current_dir + "\\" + INPUT_FILE_NAME + ".output"
-    print("xml_file_in: ", xml_file_in)
-    print("xml_file_out: ", xml_file_out)
+    file_name_in = current_dir + "\\..\\test\\" + INPUT_FILE_NAME
+    file_name_out = current_dir + "\\" + INPUT_FILE_NAME + ".output"
+    print("file_name_in: ", file_name_in)
+    print("file_name_out: ", file_name_out)
 
-    tree = parse_input_file(xml_file_in)
+    tree = parse_input_file(file_name_in)
     root = tree.getroot()
 
     attribute_list = ["timestamp", "user", "uid", "changeset", "visible"]
     remove_attributes_from_element(root, attribute_list)
 
-    #format_input_file(tree, ml_file_out)
     #remove_subelement(root, "node", "tag", "power", "tower")
     #remove_elements_by_subelement(root, "node", "tag", "power", "tower")
     #remove_elements_by_subelement(root, "way", "tag", "building", "yes")
@@ -99,7 +99,7 @@ def main():
     adapt_subelements_with_negative_references(root)
     #remove_buildings(root)
 
-    write_outputfile_file(tree, xml_file_out)
+    write_outputfile_file(tree, file_name_out)
 
 
 #-------------------------------------------------------------------------------
@@ -383,12 +383,12 @@ def can_node_be_removed(element):
 
 #-------------------------------------------------------------------------------
 def number_of_relation_references(root, identifier):
-    '''Get number of relation references'''
+    '''Get number how often identifier is referenced in relations'''
     return len(root.findall("relation/member/[@ref='" + identifier + "']"))
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def number_of_way_references(root, identifier):
-    '''Get number of way references'''
+    '''Get number how often identifier is referenced in way elements'''
     return len(root.findall("way/nd/[@ref='" + identifier + "']"))
 
 #-------------------------------------------------------------------------------test
@@ -399,13 +399,6 @@ def remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribu
         for subelement in element.findall(subelement_name):
             if k_attribute_wildcard in subelement.attrib.get("k"):
                 element.remove(subelement)
-    timer.print_result()
-
-#-------------------------------------------------------------------------------
-def format_input_file(tree, file_out):
-    '''Format input file'''
-    timer = Timer("format_input_file")
-    write_outputfile_file(tree, file_out)
     timer.print_result()
 
 #-------------------------------------------------------------------------------test
@@ -447,14 +440,17 @@ def remove_attributes_from_element(root, target_attributes):
         remove_attribute_from_element(root, target_attribute)
     timer.print_result()
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def write_outputfile_file(tree, file_out):
-    '''Export ElementTree object to file'''
-    timer = Timer("write_outputfile_file")
-    tree.write(file_out, encoding="utf-8", xml_declaration=True)
+    '''
+    Export ElementTree object to file
+    https://stackoverflow.com/questions/70893097/how-to-preserve-the-original-encoding-and-line-endings-when-writing-to-a-file
+    '''
+    timer = Timer("write_outputfile_file")    
+    tree.write(file_out, encoding="utf-8", xml_declaration=True)    
     timer.print_result()
 
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------test
 def parse_input_file(file_in):
     '''Import file to ElementTree object'''
     timer = Timer("parse_input_file")
