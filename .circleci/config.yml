@@ -42,7 +42,7 @@ jobs:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
           command: |
-            python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=~/project/1/script1 ~/project/1/test_script1.py
+            python -m pytest --cov ~/project/1/test_script1.py
       - codecov/upload
 
 # Invoke jobs via workflows
