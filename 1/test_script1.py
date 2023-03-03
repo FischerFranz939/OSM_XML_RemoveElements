@@ -8,7 +8,7 @@ python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=script1 t
 python -m pytest --cov-report term --cov-report html:coverage.html --cov=script1 test_script1.py
 
 
-VSC 
+VSC
 - Code Coverage
 
 Generate .lcov coverage files using your language's code coverage tools
@@ -320,7 +320,7 @@ def test_write_outputfile_file():
 
 # Then
     result = filecmp.cmp(xml_file_expected, xml_file_out, shallow=False)
-    assert result == True
+    assert result is True
 
 #-------------------------------------------------------------------------------
 def test_number_of_way_references():
