@@ -39,10 +39,13 @@ jobs:
           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
       - run:
-          name: Run tests
-          # This assumes pytest is installed via the install-package step above
-          command: |
-            python -m pytest --cov ~/project/1/test_script1.py
+          name: cd
+          command: cd ~/project/1; pwd
+
+      - run:
+          name: Run tests and collect coverage
+          command: python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=script1 test_script1.py
+
       - codecov/upload
 
 # Invoke jobs via workflows
