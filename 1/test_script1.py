@@ -34,7 +34,7 @@ from script1 import write_outputfile_file
 from script1 import number_of_way_references
 
 
-TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "\\..\\test\\"
+TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "/../test/"
 
 
 #-------------------------------------------------------------------------------
