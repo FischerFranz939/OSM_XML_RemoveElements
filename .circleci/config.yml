@@ -42,9 +42,8 @@ jobs:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
           command: |
-            #python -m pytest -v ~/project/1/test_script1.py
             python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=~/project/1script1 ~/project/1test_script1.py
-      - codecov/upload:
+      - codecov/upload
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
