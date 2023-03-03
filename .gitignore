@@ -1,2 +1,7 @@
 *.output
-*.pyc
+*.py[oc]
+__pycache__
+.coverage
+.pytest_cache/
+coverage.xml
+coverage/

@@ -2,7 +2,21 @@
 Test script for script1
 
 https://pythontest.com/framework/pytest/pytest-introduction/
-python.exe -m pytest -v d:/MeineProgramme/OSM_XML_RemoveElements/1/test_script1.py
+python -m pytest -v 1/test_script1.py
+python -m pytest --cov=script1 test_script1.py    --> NO PATH !!!!
+python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=script1 test_script1.py
+python -m pytest --cov-report term --cov-report html:coverage.html --cov=script1 test_script1.py
+
+
+VSC 
+- Code Coverage
+
+Generate .lcov coverage files using your language's code coverage tools
+Set the coverage location setting markiscodecoverage.searchCriteria, default: coverage/lcov*.info
+
+
+- py-coverage-view
+
 '''
 import xml.etree.ElementTree as ET
 import pathlib

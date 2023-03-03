@@ -1,6 +1,10 @@
 ![Python version](https://img.shields.io/github/pipenv/locked/python-version/FischerFranz939/OSM_XML_RemoveElements)
 ![GitHub license](https://img.shields.io/github/license/FischerFranz939/OSM_XML_RemoveElements)
 ![CircleCI](https://img.shields.io/circleci/build/github/FischerFranz939/OSM_XML_RemoveElements/main)
+[![Coverage Status][cov-img]][cov]
+
+[cov-img]: https://codecov.io/github/FischerFranz939/OSM_XML_RemoveElements/branch/main/graph/badge.svg
+[cov]: https://codecov.io/github/FischerFranz939/OSM_XML_RemoveElements
 
 
 # OSM_XML_RemoveElements

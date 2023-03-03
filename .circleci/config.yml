@@ -13,7 +13,8 @@ orbs:
 
   # https://circleci.com/blog/making-code-coverage-easy-to-see-with-the-codecov-orb/#c-consent-modal
   # https://circleci.com/developer/orbs/orb/codecov/codecov
-  codecov: codecov/codecov@3.2.4
+  # https://docs.codecov.com/docs/github-2-getting-a-codecov-account-and-uploading-coverage
+  codecov: codecov/codecov@3.2.2
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -41,9 +42,9 @@ jobs:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
           command: |
-            python -m pytest -v ~/project/1/test_script1.py
+            #python -m pytest -v ~/project/1/test_script1.py
+            python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=~/project/1script1 ~/project/1test_script1.py
       - codecov/upload:
-          file: ~/project/1/test_script1.py
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
