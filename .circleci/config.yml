@@ -42,11 +42,11 @@ jobs:
           name: pwd
           command: pwd
       - run:
-          name: cd
-          command: cd ~/project/1
+          name: cd1
+          command: cd ~/project/1; ls -al
       - run:
-          name: ll
-          command: ls -al
+          name: cd2
+          command: cd 1; ls -al
       - run:
           name: Run tests and collect coverage
           command: python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=script1 test_script1.py

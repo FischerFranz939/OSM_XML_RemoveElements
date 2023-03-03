@@ -33,7 +33,6 @@ TODOs:
 import xml.etree.ElementTree as ET
 import time
 import pathlib
-import io
 
 
 INPUT_FILE_NAME = "test2_formated.xml"
@@ -446,8 +445,8 @@ def write_outputfile_file(tree, file_out):
     Export ElementTree object to file
     https://stackoverflow.com/questions/70893097/how-to-preserve-the-original-encoding-and-line-endings-when-writing-to-a-file
     '''
-    timer = Timer("write_outputfile_file")    
-    tree.write(file_out, encoding="utf-8", xml_declaration=True)    
+    timer = Timer("write_outputfile_file")
+    tree.write(file_out, encoding="utf-8", xml_declaration=True)
     timer.print_result()
 
 #-------------------------------------------------------------------------------test
