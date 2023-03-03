@@ -39,8 +39,17 @@ jobs:
           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
       - run:
+          name: pwd
+          command: pwd
+      - run:
+          name: cd
+          command: cd ~/project/1
+      - run:
+          name: ll
+          command: ls -al
+      - run:
           name: Run tests and collect coverage
-          command: cd ~/project/1; python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=script1 test_script1.py
+          command: python -m pytest --cov-report term --cov-report xml:coverage.xml --cov=script1 test_script1.py
 
       - codecov/upload
 
