@@ -75,8 +75,8 @@ def main():
     current_dir = str(pathlib.Path(__file__).parent.resolve())
     print("current_dir: ", current_dir)
 
-    file_name_in = current_dir + "\\..\\test\\" + INPUT_FILE_NAME
-    file_name_out = current_dir + "\\" + INPUT_FILE_NAME + ".output"
+    file_name_in = current_dir + "/../test/" + INPUT_FILE_NAME
+    file_name_out = current_dir + "/" + INPUT_FILE_NAME + ".output"
     print("file_name_in: ", file_name_in)
     print("file_name_out: ", file_name_out)
 
@@ -92,7 +92,6 @@ def main():
     #remove_subelement_by_wildcard(root, "node", "tag", "wiki")
 
     #remove_node_elements_with_no_reference(root, True)
-    #performance_remove_node_elements_with_no_reference(root)
 
     #adapt_elements_with_negative_id(root)
     adapt_subelements_with_negative_references(root)
@@ -122,7 +121,7 @@ def remove_buildings(root):
             remove_nodes_if_not_referenced(root, references)
     timer.print_result()
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def remove_element_by_id(root, element_name, identifier):
     '''
     Remove all first level elements for the given "element_name" and the given "id"
@@ -254,86 +253,6 @@ def change_negative_references_to_positive(root, x_path):
             #print(element.attrib["ref"])
 
 #-------------------------------------------------------------------------------
-def performance_remove_node_elements_with_no_reference(root):
-    '''
-    Results for andorra-latest.osm
-
-    find relation reference for ONE node id --> ca.  30ms
-    find way      reference for ONE node id --> ca. 100ms
-
-    find ALL nodes and check for exceptions --> ca. 160ms
-    number of checked nodes:       329767
-    number of nodes not to remove: 228
-
-    => 329767 * (30+100)ms = 11,9h
-
-    calculated:
-    --> 1000 * (30+100)ms = 130000 ms (2m 10s)
-    program output:
-    1000 nodes processed in 113689 ms
-    2000 nodes processed in 231838 ms
-    3000 nodes processed in 352840 ms
-    4000 nodes processed in 470426 ms
-    5000 nodes processed in 588397 ms
-
-    !!!! Python kann nur eine CPU nutzen !!!!
-    '''
-    timer = Timer("performance_remove_node_elements_with_no_reference")
-
-    node_id_no_ref  = '64954477'   #andorra-latest.osm --> no references
-    node_id_ref_way = '3020646532' #andorra-latest.osm --> reference to way
-    node_id_ref_rel = '766150394'  #andorra-latest.osm --> reference to relation
-
-    performance_number_of_way_references(root, node_id_no_ref)
-    performance_number_of_way_references(root, node_id_ref_way)
-    performance_number_of_way_references(root, node_id_ref_rel)
-
-    performance_number_of_relation_references(root, node_id_no_ref)
-    performance_number_of_relation_references(root, node_id_ref_way)
-    performance_number_of_relation_references(root, node_id_ref_rel)
-
-    performance_find_all_nodes(root)
-
-    timer.print_result()
-
-#-------------------------------------------------------------------------------
-def performance_find_all_nodes(root):
-    '''
-    Count all nodes and all nodes which can not be removed.
-    Criteria can be e.g. attributes in tags.
-    '''
-    timer = Timer("performance_find_all_nodes")
-
-    counter_nodes = 0
-    counter_not_remove = 0
-    for element in root.findall("node"):
-        counter_nodes = counter_nodes + 1
-        identifier = element.attrib.get("id")
-        remove = can_node_be_removed(element)
-        if not remove:
-            counter_not_remove = counter_not_remove + 1
-            print("node can NOT be removed. id: ", identifier)
-
-    print("  number of checked nodes:      ", counter_nodes)
-    print("  number of nodes not to remove:", counter_not_remove)
-
-    timer.print_result()
-
-#-------------------------------------------------------------------------------
-def performance_number_of_relation_references(root, identifier):
-    '''performance measurement - get number of relation references'''
-    timer = Timer("performance_number_of_relation_references")
-    number = number_of_relation_references(root, identifier)
-    timer.print_result(create_key_value_string("found references", number))
-
-#-------------------------------------------------------------------------------
-def performance_number_of_way_references(root, identifier):
-    '''Performance measurement - get number of way references'''
-    timer = Timer("performance_number_of_way_references")
-    number = number_of_way_references(root, identifier)
-    timer.print_result(create_key_value_string("found references", number))
-
-#-------------------------------------------------------------------------------
 def create_key_value_string(text, int_value):
     '''Create key value string'''
     return "("+ text +": " + str(int_value) + ")"
@@ -385,12 +304,12 @@ def number_of_relation_references(root, identifier):
     '''Get number how often identifier is referenced in relations'''
     return len(root.findall("relation/member/[@ref='" + identifier + "']"))
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def number_of_way_references(root, identifier):
     '''Get number how often identifier is referenced in way elements'''
     return len(root.findall("way/nd/[@ref='" + identifier + "']"))
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribute_wildcard):
     '''Remove subelement by wildcard'''
     timer = Timer("remove_subelement_by_wildcard")
@@ -400,7 +319,7 @@ def remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribu
                 element.remove(subelement)
     timer.print_result()
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
     '''Remove elements by subelement'''
     timer = Timer("remove_elements_by_subelement")
@@ -410,7 +329,7 @@ def remove_elements_by_subelement(root, element_name, subelement_name, k_attribu
             root.remove(element)
     timer.print_result()
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def remove_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
     '''Remove subelement by attributes'''
     timer = Timer("remove_subelement")
@@ -421,7 +340,7 @@ def remove_subelement(root, element_name, subelement_name, k_attribute, v_attrib
                 element.remove(subelement)
     timer.print_result()
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def remove_attribute_from_element(root, target_attribute):
     '''Remove attribute from element'''
     timer = Timer("remove_attribute_from_element")
@@ -431,7 +350,7 @@ def remove_attribute_from_element(root, target_attribute):
         del element.attrib[target_attribute]
     timer.print_result()
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def remove_attributes_from_element(root, target_attributes):
     '''Remove attributes from element'''
     timer = Timer("remove_attributes_from_element")
@@ -439,7 +358,7 @@ def remove_attributes_from_element(root, target_attributes):
         remove_attribute_from_element(root, target_attribute)
     timer.print_result()
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def write_outputfile_file(tree, file_out):
     '''
     Export ElementTree object to file
@@ -449,7 +368,7 @@ def write_outputfile_file(tree, file_out):
     tree.write(file_out, encoding="utf-8", xml_declaration=True)
     timer.print_result()
 
-#-------------------------------------------------------------------------------test
+#-------------------------------------------------------------------------------
 def parse_input_file(file_in):
     '''Import file to ElementTree object'''
     timer = Timer("parse_input_file")
