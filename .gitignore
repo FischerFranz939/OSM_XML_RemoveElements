@@ -3,5 +3,4 @@
 __pycache__
 .coverage
 .pytest_cache/
-coverage.xml
-coverage/
+lcov.info
