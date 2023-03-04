@@ -29,6 +29,7 @@ from script1 import can_node_be_removed
 from script1 import is_node_id_referenced
 from script1 import number_of_relation_references
 from script1 import number_of_way_references
+from script1 import remove_buildings
 
 
 TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "/../test/"
@@ -553,3 +554,39 @@ def test_number_of_way_references_0():
 
 # Then
     assert result == 0
+
+#-------------------------------------------------------------------------------
+def test_remove_buildings():
+    '''Test - remove_buildings'''
+    # Given
+    xml_in = """<body>
+    <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+        <tag k="name" v="Pica d&apos;Estats"/>
+    </node>
+    <way id='268645709' timestamp='2015-09-22T18:58:53Z' uid='548288' user='WayneSchlegel' visible='true' version='3' changeset='34190335'>
+        <nd ref='2739790961' />
+        <nd ref='2739790947' />
+        <nd ref='2739790961' />
+        <tag k='addr:city' v='Dettingen an der Erms' />
+        <tag k='addr:street' v='Sperberweg' />
+        <tag k='building' v='yes' />
+    </way>
+    <node id='2739790947' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5316081' lon='9.359028' />
+    <node id='2739790961' timestamp='2016-06-27T01:55:14Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.531868' lon='9.357414' />
+    </body>"""
+
+    xml_expected = """<body>
+    <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+        <tag k="name" v="Pica d'Estats" />
+    </node>
+    </body>"""
+    root                 = ET.fromstring(xml_in)
+
+# When
+    remove_buildings(root)
+    xml_out = ET.tostring(root, encoding="unicode", method="xml")
+
+# Then
+    print_xmls(xml_in, xml_out, xml_expected)
+    #assert False
+    assert xml_expected == xml_out
