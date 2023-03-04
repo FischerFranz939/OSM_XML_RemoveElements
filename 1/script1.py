@@ -253,11 +253,6 @@ def change_negative_references_to_positive(root, x_path):
             #print(element.attrib["ref"])
 
 #-------------------------------------------------------------------------------
-def create_key_value_string(text, int_value):
-    '''Create key value string'''
-    return "("+ text +": " + str(int_value) + ")"
-
-#-------------------------------------------------------------------------------
 def remove_node_elements_with_no_reference(root, print_removed_elements=False):
     '''Remove node elements with no reference'''
     timer = Timer("remove_node_elements_with_no_reference")

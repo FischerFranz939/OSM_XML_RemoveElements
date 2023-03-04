@@ -5,14 +5,16 @@ python perftest_script1.py
 '''
 import pathlib
 
+
 from script1 import Timer
 from script1 import parse_input_file
 from script1 import can_node_be_removed
 from script1 import number_of_relation_references
-from script1 import create_key_value_string
 from script1 import number_of_way_references
 
+
 INPUT_FILE_NAME = "andorra-latest.osm"
+
 
 #-------------------------------------------------------------------------------
 # Main
@@ -26,12 +28,18 @@ def main():
     print("file_name_in: ", file_name_in)
 
     tree = parse_input_file(file_name_in)
-    root = tree.getroot()   
-    
+    root = tree.getroot()
+
     performance_remove_node_elements_with_no_reference(root)
-    
+
+
 #-------------------------------------------------------------------------------
 # Functions
+#-------------------------------------------------------------------------------
+def create_key_value_string(text, int_value):
+    '''Create key value string'''
+    return "("+ text +": " + str(int_value) + ")"
+
 #-------------------------------------------------------------------------------
 def performance_remove_node_elements_with_no_reference(root):
     '''

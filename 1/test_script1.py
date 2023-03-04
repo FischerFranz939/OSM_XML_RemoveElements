@@ -2,7 +2,9 @@
 Test script for script1
 
 https://pythontest.com/framework/pytest/pytest-introduction/
+
 python -m pytest -v 1/test_script1.py
+
 !!!! PATH not supported !!!!
 python -m pytest --cov=script1 test_script1.py
 python -m pytest --cov-report term --cov-report xml:lcov.xml   --cov=script1 test_script1.py
@@ -23,6 +25,7 @@ from script1 import remove_subelement_by_wildcard
 from script1 import parse_input_file
 from script1 import write_outputfile_file
 from script1 import number_of_way_references
+from script1 import can_node_be_removed
 
 
 TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "/../test/"
@@ -345,3 +348,50 @@ def test_number_of_way_references():
 
 # Then
     assert result == 2
+
+#-------------------------------------------------------------------------------
+def test_can_node_be_removed_false():
+    '''Test - can_node_be_removed'''
+    # Given
+    #Note: v='Pica d&apos;Estats' vs v="Pica d'Estats"
+    xml_in = """<node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+        <tag k="name" v="Pica d&apos;Estats"/>
+        <tag k="name:en" v="Pique d&apos;Estats"/>
+        <tag k="natural" v="peak"/>
+        <tag k="source" v="Institut Cartogràfic de Catalunya"/>
+        <tag k="source:prominence" v="https://en.wikipedia.org/wiki/List_of_Pyrenean_three-thousanders"/>
+        <tag k="url:source" v="ftp://geofons.icc.cat/fitxes/100CIMS/271064006.pdf"/>
+        <tag k="wikidata" v="Q1537733"/>
+        <tag k="wikipedia" v="ca:Pica d&apos;Estats"/>
+    </node>"""
+
+    root = ET.fromstring(xml_in)
+
+# When
+    result = can_node_be_removed(root)
+
+# Then
+    assert result is False
+
+#-------------------------------------------------------------------------------
+def test_can_node_be_removed_true():
+    '''Test - can_node_be_removed'''
+    # Given
+    #Note: v='Pica d&apos;Estats' vs v="Pica d'Estats"
+    xml_in = """<node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+        <tag k="name" v="Pica d&apos;Estats"/>
+        <tag k="name:en" v="Pique d&apos;Estats"/>
+        <tag k="source" v="Institut Cartogràfic de Catalunya"/>
+        <tag k="source:prominence" v="https://en.wikipedia.org/wiki/List_of_Pyrenean_three-thousanders"/>
+        <tag k="url:source" v="ftp://geofons.icc.cat/fitxes/100CIMS/271064006.pdf"/>
+        <tag k="wikidata" v="Q1537733"/>
+        <tag k="wikipedia" v="ca:Pica d&apos;Estats"/>
+    </node>"""
+
+    root = ET.fromstring(xml_in)
+
+# When
+    result = can_node_be_removed(root)
+
+# Then
+    assert result is True
