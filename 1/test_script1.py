@@ -26,6 +26,9 @@ from script1 import parse_input_file
 from script1 import write_outputfile_file
 from script1 import number_of_way_references
 from script1 import can_node_be_removed
+from script1 import is_node_id_referenced
+from script1 import number_of_relation_references
+from script1 import number_of_way_references
 
 
 TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "/../test/"
@@ -56,13 +59,11 @@ def test_remove_element_by_id():
     <node id='60117350' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='15' changeset='40512409' lat='48.5243657' lon='9.3493966' />
     <node id='60117351' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='14' changeset='40512409' lat='48.5249231' lon='9.3488887' />
     </body>"""
-
     xml_expected = """<body>
     <bounds minlat="48.5297218" minlon="9.3489575" maxlat="48.5378919" maxlon="9.3748784" origin="CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)" />
     <node id="31287590" timestamp="2016-07-06T01:21:43Z" uid="548288" user="WayneSchlegel" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
     <node id="60117351" timestamp="2016-07-06T01:22:11Z" uid="548288" user="WayneSchlegel" visible="true" version="14" changeset="40512409" lat="48.5249231" lon="9.3488887" />
     </body>"""
-
     root         = ET.fromstring(xml_in)
     element_name = "node"
     identifier   = "60117350"
@@ -86,14 +87,12 @@ def test_remove_attribute_from_element():
     <node id='60117350' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='15' changeset='40512409' lat='48.5243657' lon='9.3493966' />
     <node id='60117351' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='14' changeset='40512409' lat='48.5249231' lon='9.3488887' />
     </body>"""
-
     xml_expected = """<body>
     <bounds minlat="48.5297218" minlon="9.3489575" maxlat="48.5378919" maxlon="9.3748784" origin="CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)" />
     <node id="31287590" uid="548288" user="WayneSchlegel" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
     <node id="60117350" uid="548288" user="WayneSchlegel" visible="true" version="15" changeset="40512409" lat="48.5243657" lon="9.3493966" />
     <node id="60117351" uid="548288" user="WayneSchlegel" visible="true" version="14" changeset="40512409" lat="48.5249231" lon="9.3488887" />
     </body>"""
-
     root             = ET.fromstring(xml_in)
     target_attribute = "timestamp"
 
@@ -116,14 +115,12 @@ def test_remove_attributes_from_element():
     <node id='60117350' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='15' changeset='40512409' lat='48.5243657' lon='9.3493966' />
     <node id='60117351' timestamp='2016-07-06T01:22:11Z' uid='548288' user='WayneSchlegel' visible='true' version='14' changeset='40512409' lat='48.5249231' lon='9.3488887' />
     </body>"""
-
     xml_expected = """<body>
     <bounds minlat="48.5297218" minlon="9.3489575" maxlat="48.5378919" maxlon="9.3748784" origin="CGImap 0.8.6 (3984174 spike-06.openstreetmap.org)" />
     <node id="31287590" timestamp="2016-07-06T01:21:43Z" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
     <node id="60117350" timestamp="2016-07-06T01:22:11Z" visible="true" version="15" changeset="40512409" lat="48.5243657" lon="9.3493966" />
     <node id="60117351" timestamp="2016-07-06T01:22:11Z" visible="true" version="14" changeset="40512409" lat="48.5249231" lon="9.3488887" />
     </body>"""
-
     root                  = ET.fromstring(xml_in)
     target_attribute_list = ["user", "uid"]
 
@@ -148,7 +145,6 @@ def test_remove_subelement():
         <tag k='source' v='survey;image' />
     </node>
     </body>"""
-
     xml_expected = """<body>
     <node id="251665776" timestamp="2016-06-27T01:55:11Z" uid="548288" user="WayneSchlegel" visible="true" version="5" changeset="40311689" lat="48.5314869" lon="9.3497587" />
     <node id="343556624" timestamp="2012-10-05T18:32:53Z" uid="548288" user="WayneSchlegel" visible="true" version="3" changeset="13376550" lat="48.5518545" lon="9.2802616">
@@ -156,7 +152,6 @@ def test_remove_subelement():
         <tag k="source" v="survey;image" />
     </node>
     </body>"""
-
     root            = ET.fromstring(xml_in)
     element_name    = "node"
     subelement_name = "tag"
@@ -185,12 +180,10 @@ def test_remove_elements_by_subelement():
     </node>
     <node id='251665772' timestamp='2016-06-27T01:55:11Z' uid='548288' user='WayneSchlegel' visible='true' version='5' changeset='40311689' lat='48.5328829' lon='9.3450466' />
     </body>"""
-
     xml_expected = """<body>
     <node id="251665776" timestamp="2016-06-27T01:55:11Z" uid="548288" user="WayneSchlegel" visible="true" version="5" changeset="40311689" lat="48.5314869" lon="9.3497587" />
     <node id="251665772" timestamp="2016-06-27T01:55:11Z" uid="548288" user="WayneSchlegel" visible="true" version="5" changeset="40311689" lat="48.5328829" lon="9.3450466" />
     </body>"""
-
     root            = ET.fromstring(xml_in)
     element_name    = "node"
     subelement_name = "tag"
@@ -250,7 +243,6 @@ def test_remove_subelement_by_wildcard():
     </way>
     <node id="2739790947" timestamp="2016-06-27T01:55:13Z" uid="548288" user="WayneSchlegel" visible="true" version="2" changeset="40311689" lat="48.5316081" lon="9.359028" />
     </body>"""
-
     root                 = ET.fromstring(xml_in)
     element_name         = "node"
     subelement_name      = "tag"
@@ -287,7 +279,6 @@ def test_parse_input_file():
     <tag k="wheelchair" v="yes" />
   </node>
 </osm>"""
-
     xml_file_in = TEST_PATH + "test3.xml"
 
 # When
@@ -339,7 +330,6 @@ def test_number_of_way_references():
     </way>
     <node id='2739790947' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5316081' lon='9.359028' />
     </body>"""
-
     root       = ET.fromstring(xml_in)
     identifier = "3747488458"
 
@@ -351,9 +341,8 @@ def test_number_of_way_references():
 
 #-------------------------------------------------------------------------------
 def test_can_node_be_removed_false():
-    '''Test - can_node_be_removed'''
+    '''Test - can_node_be_removed - result: false'''
     # Given
-    #Note: v='Pica d&apos;Estats' vs v="Pica d'Estats"
     xml_in = """<node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
         <tag k="name" v="Pica d&apos;Estats"/>
         <tag k="name:en" v="Pique d&apos;Estats"/>
@@ -364,7 +353,6 @@ def test_can_node_be_removed_false():
         <tag k="wikidata" v="Q1537733"/>
         <tag k="wikipedia" v="ca:Pica d&apos;Estats"/>
     </node>"""
-
     root = ET.fromstring(xml_in)
 
 # When
@@ -375,9 +363,8 @@ def test_can_node_be_removed_false():
 
 #-------------------------------------------------------------------------------
 def test_can_node_be_removed_true():
-    '''Test - can_node_be_removed'''
+    '''Test - can_node_be_removed - result: true'''
     # Given
-    #Note: v='Pica d&apos;Estats' vs v="Pica d'Estats"
     xml_in = """<node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
         <tag k="name" v="Pica d&apos;Estats"/>
         <tag k="name:en" v="Pique d&apos;Estats"/>
@@ -387,7 +374,6 @@ def test_can_node_be_removed_true():
         <tag k="wikidata" v="Q1537733"/>
         <tag k="wikipedia" v="ca:Pica d&apos;Estats"/>
     </node>"""
-
     root = ET.fromstring(xml_in)
 
 # When
@@ -395,3 +381,175 @@ def test_can_node_be_removed_true():
 
 # Then
     assert result is True
+
+#-------------------------------------------------------------------------------
+def test_is_node_id_referenced_way_true():
+    '''Test - is_node_id_referenced - way - result: true'''
+    # Given
+    xml_in = """<body>
+    <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "3747486121"
+
+# When
+    result = is_node_id_referenced(root, node_id)
+
+# Then
+    assert result is True
+
+#-------------------------------------------------------------------------------
+def test_is_node_id_referenced_way_false():
+    '''Test - is_node_id_referenced - way - result: false'''
+    # Given
+    xml_in = """<body>
+    <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "1111"
+
+# When
+    result = is_node_id_referenced(root, node_id)
+
+# Then
+    assert result is False
+
+#-------------------------------------------------------------------------------
+def test_is_node_id_referenced_relation_true():
+    '''Test - is_node_id_referenced - relation - result: true'''
+    # Given
+    xml_in = """<body>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start"/>
+        <member type="way" ref="521060220" role="both"/>
+        <member type="way" ref="240509448" role="both"/>
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia"/>
+        <tag k="type" v="route"/>
+    </relation>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "521060220"
+
+# When
+    result = is_node_id_referenced(root, node_id)
+
+# Then
+    assert result is True
+
+#-------------------------------------------------------------------------------
+def test_is_node_id_referenced_relation_false():
+    '''Test - is_node_id_referenced - relation - result: false'''
+    # Given
+    xml_in = """<body>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start"/>
+        <member type="way" ref="521060220" role="both"/>
+        <member type="way" ref="240509448" role="both"/>
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia"/>
+        <tag k="type" v="route"/>
+    </relation>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "1111"
+
+# When
+    result = is_node_id_referenced(root, node_id)
+
+# Then
+    assert result is False
+
+#-------------------------------------------------------------------------------
+def test_number_of_relation_references_1():
+    '''Test - number_of_relation_references - found 1'''
+    # Given
+    xml_in = """<body>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start"/>
+        <member type="way" ref="521060220" role="both"/>
+        <member type="way" ref="240509448" role="both"/>
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia"/>
+        <tag k="type" v="route"/>
+    </relation>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "521060220"
+
+# When
+    result = number_of_relation_references(root, node_id)
+
+# Then
+    assert result == 1
+
+#-------------------------------------------------------------------------------
+def test_number_of_relation_references_0():
+    '''Test - number_of_relation_references - found 0'''
+    # Given
+    xml_in = """<body>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start"/>
+        <member type="way" ref="521060220" role="both"/>
+        <member type="way" ref="240509448" role="both"/>
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia"/>
+        <tag k="type" v="route"/>
+    </relation>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "1111"
+
+# When
+    result = number_of_relation_references(root, node_id)
+
+# Then
+    assert result == 0
+
+#-------------------------------------------------------------------------------
+def test_number_of_way_references_1():
+    '''Test - number_of_way_references - found 1'''
+    # Given
+    xml_in = """<body>
+    <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "3747488457"
+
+# When
+    result = number_of_way_references(root, node_id)
+
+# Then
+    assert result == 1
+
+#-------------------------------------------------------------------------------
+def test_number_of_way_references_0():
+    '''Test - number_of_way_references - found 0'''
+    # Given
+    xml_in = """<body>
+    <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    </body>"""
+    root    = ET.fromstring(xml_in)
+    node_id = "1111"
+
+# When
+    result = number_of_way_references(root, node_id)
+
+# Then
+    assert result == 0
