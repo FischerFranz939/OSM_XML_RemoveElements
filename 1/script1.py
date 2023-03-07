@@ -1,6 +1,6 @@
 '''
 Script to remove unwanted elements/attributes from XML.
-- processes the whole input XML-file)
+- processes the whole input XML-file
 
 -------------------------------------------------------------------------------
  Naming, Notes...
@@ -222,8 +222,8 @@ def adapt_elements_with_negative_id(root):
 #-------------------------------------------------------------------------------
 def adapt_subelements_with_negative_references(root):
     '''
-    Get all first level elements "way" and "relation" with negativ references in their
-    subelements.
+    Get all first level elements "way" and "relation" with negativ references
+    in their subelements.
     Negate the ID.
     For ways also remove the attribute "action".
     '''
@@ -371,8 +371,8 @@ def write_linux_line_endings(file_in, file_out):
     https://stackoverflow.com/questions/70893097/how-to-preserve-the-original-encoding-and-line-endings-when-writing-to-a-file
     '''
     # replacement strings
-    WINDOWS_LINE_ENDING = b'\r\n'
-    UNIX_LINE_ENDING = b'\n'
+    windows_line_endings = b'\r\n'
+    unix_line_endings = b'\n'
 
     file_size_begin = Path(file_in).stat().st_size
     timer = Timer("write_linux_line_endings")
@@ -381,7 +381,7 @@ def write_linux_line_endings(file_in, file_out):
         content = open_file.read()
 
     # Windows --> Unix
-    content = content.replace(WINDOWS_LINE_ENDING, UNIX_LINE_ENDING)
+    content = content.replace(windows_line_endings, unix_line_endings)
 
     with open(file_out, 'wb') as open_file:
         open_file.write(content)

@@ -17,23 +17,6 @@ import filecmp
 import script1
 
 
-from script1 import remove_element_by_id
-from script1 import remove_attribute_from_element
-from script1 import remove_attributes_from_element
-from script1 import remove_subelement
-from script1 import remove_elements_by_subelement
-from script1 import remove_subelement_by_wildcard
-from script1 import parse_input_file
-from script1 import write_outputfile_file
-from script1 import number_of_way_references
-from script1 import can_node_be_removed
-from script1 import is_node_id_referenced
-from script1 import number_of_relation_references
-from script1 import number_of_way_references
-from script1 import remove_buildings
-from script1 import write_linux_line_endings
-
-
 TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "/../test/"
 
 
@@ -72,7 +55,7 @@ def test_remove_element_by_id():
     identifier   = "60117350"
 
 # When
-    remove_element_by_id(root, element_name, identifier)
+    script1.remove_element_by_id(root, element_name, identifier)
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
@@ -100,7 +83,7 @@ def test_remove_attribute_from_element():
     target_attribute = "timestamp"
 
 # When
-    remove_attribute_from_element(root, target_attribute)
+    script1.remove_attribute_from_element(root, target_attribute)
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
@@ -128,7 +111,7 @@ def test_remove_attributes_from_element():
     target_attribute_list = ["user", "uid"]
 
 # When
-    remove_attributes_from_element(root, target_attribute_list)
+    script1.remove_attributes_from_element(root, target_attribute_list)
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
@@ -162,7 +145,7 @@ def test_remove_subelement():
     v_attribute     = "tower"
 
 # When
-    remove_subelement(root, element_name, subelement_name, k_attribute, v_attribute)
+    script1.remove_subelement(root, element_name, subelement_name, k_attribute, v_attribute)
     xml_out = ET.tostring(root, encoding='unicode', method='xml')
 
 # Then
@@ -194,7 +177,7 @@ def test_remove_elements_by_subelement():
     v_attribute     = "tower"
 
 # When
-    remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute)
+    script1.remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
@@ -252,7 +235,7 @@ def test_remove_subelement_by_wildcard():
     k_attribute_wildcard = "wiki"
 
 # When
-    remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribute_wildcard)
+    script1.remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribute_wildcard)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
@@ -285,7 +268,7 @@ def test_parse_input_file():
     xml_file_in = TEST_PATH + "test3.xml"
 
 # When
-    tree = parse_input_file(xml_file_in)
+    tree = script1.parse_input_file(xml_file_in)
     root = tree.getroot()
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
@@ -301,10 +284,10 @@ def test_write_outputfile_file():
     xml_file_in = TEST_PATH + "test3.xml"
     xml_file_out = TEST_PATH + "test3.output"
     xml_file_expected = TEST_PATH + "test3.expected"
-    tree = parse_input_file(xml_file_in)
+    tree = script1.parse_input_file(xml_file_in)
 
 # When
-    write_outputfile_file(tree, xml_file_out)
+    script1.write_outputfile_file(tree, xml_file_out)
 
 # Then
     result = filecmp.cmp(xml_file_expected, xml_file_out, shallow=False)
@@ -337,7 +320,7 @@ def test_number_of_way_references():
     identifier = "3747488458"
 
   # When
-    result = number_of_way_references(root, identifier)
+    result = script1.number_of_way_references(root, identifier)
 
 # Then
     assert result == 2
@@ -346,7 +329,8 @@ def test_number_of_way_references():
 def test_can_node_be_removed_false():
     '''Test - can_node_be_removed - result: false'''
     # Given
-    xml_in = """<node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+    xml_in = """
+    <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
         <tag k="name" v="Pica d&apos;Estats"/>
         <tag k="name:en" v="Pique d&apos;Estats"/>
         <tag k="natural" v="peak"/>
@@ -359,7 +343,7 @@ def test_can_node_be_removed_false():
     root = ET.fromstring(xml_in)
 
 # When
-    result = can_node_be_removed(root)
+    result = script1.can_node_be_removed(root)
 
 # Then
     assert result is False
@@ -368,7 +352,8 @@ def test_can_node_be_removed_false():
 def test_can_node_be_removed_true():
     '''Test - can_node_be_removed - result: true'''
     # Given
-    xml_in = """<node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+    xml_in = """
+    <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
         <tag k="name" v="Pica d&apos;Estats"/>
         <tag k="name:en" v="Pique d&apos;Estats"/>
         <tag k="source" v="Institut Cartogràfic de Catalunya"/>
@@ -380,7 +365,7 @@ def test_can_node_be_removed_true():
     root = ET.fromstring(xml_in)
 
 # When
-    result = can_node_be_removed(root)
+    result = script1.can_node_be_removed(root)
 
 # Then
     assert result is True
@@ -401,7 +386,7 @@ def test_is_node_id_referenced_way_true():
     node_id = "3747486121"
 
 # When
-    result = is_node_id_referenced(root, node_id)
+    result = script1.is_node_id_referenced(root, node_id)
 
 # Then
     assert result is True
@@ -422,7 +407,7 @@ def test_is_node_id_referenced_way_false():
     node_id = "1111"
 
 # When
-    result = is_node_id_referenced(root, node_id)
+    result = script1.is_node_id_referenced(root, node_id)
 
 # Then
     assert result is False
@@ -444,7 +429,7 @@ def test_is_node_id_referenced_relation_true():
     node_id = "521060220"
 
 # When
-    result = is_node_id_referenced(root, node_id)
+    result = script1.is_node_id_referenced(root, node_id)
 
 # Then
     assert result is True
@@ -466,7 +451,7 @@ def test_is_node_id_referenced_relation_false():
     node_id = "1111"
 
 # When
-    result = is_node_id_referenced(root, node_id)
+    result = script1.is_node_id_referenced(root, node_id)
 
 # Then
     assert result is False
@@ -488,7 +473,7 @@ def test_number_of_relation_references_1():
     node_id = "521060220"
 
 # When
-    result = number_of_relation_references(root, node_id)
+    result = script1.number_of_relation_references(root, node_id)
 
 # Then
     assert result == 1
@@ -510,7 +495,7 @@ def test_number_of_relation_references_0():
     node_id = "1111"
 
 # When
-    result = number_of_relation_references(root, node_id)
+    result = script1.number_of_relation_references(root, node_id)
 
 # Then
     assert result == 0
@@ -531,7 +516,7 @@ def test_number_of_way_references_1():
     node_id = "3747488457"
 
 # When
-    result = number_of_way_references(root, node_id)
+    result = script1.number_of_way_references(root, node_id)
 
 # Then
     assert result == 1
@@ -552,7 +537,7 @@ def test_number_of_way_references_0():
     node_id = "1111"
 
 # When
-    result = number_of_way_references(root, node_id)
+    result = script1.number_of_way_references(root, node_id)
 
 # Then
     assert result == 0
@@ -585,7 +570,7 @@ def test_remove_buildings():
     root                 = ET.fromstring(xml_in)
 
 # When
-    remove_buildings(root)
+    script1.remove_buildings(root)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
@@ -602,7 +587,7 @@ def test_write_linux_line_endings():
     xml_file_expected = TEST_PATH + "test2_formated.expected"
 
 # When
-    write_linux_line_endings(xml_file_in, xml_file_out)
+    script1.write_linux_line_endings(xml_file_in, xml_file_out)
 
 # Then
     result = filecmp.cmp(xml_file_expected, xml_file_out, shallow=False)
@@ -689,6 +674,51 @@ def test_remove_node_elements_with_no_reference():
 
 # When
     script1.remove_node_elements_with_no_reference(root)
+    xml_out = ET.tostring(root, encoding="unicode", method="xml")
+
+# Then
+    print_xmls(xml_in, xml_out, xml_expected)
+    #assert False
+    assert xml_expected == xml_out
+
+#-------------------------------------------------------------------------------
+def test_adapt_subelements_with_negative_references():
+    '''Test - adapt_subelements_with_negative_references'''
+    # Given
+    xml_in = """<body>
+    <way id="371149002" action="modify" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="-3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start"/>
+        <member type="way" ref="-521060220" role="both"/>
+        <member type="way" ref="240509448" role="both"/>
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia"/>
+        <tag k="type" v="route"/>
+    </relation>
+    </body>"""
+    xml_expected = """<body>
+    <way id="371149002" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start" />
+        <member type="way" ref="521060220" role="both" />
+        <member type="way" ref="240509448" role="both" />
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia" />
+        <tag k="type" v="route" />
+    </relation>
+    </body>"""
+    root = ET.fromstring(xml_in)
+
+# When
+    script1.adapt_subelements_with_negative_references(root)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
