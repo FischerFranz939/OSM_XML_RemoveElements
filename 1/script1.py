@@ -32,7 +32,7 @@ TODOs:
 '''
 import xml.etree.ElementTree as ET
 import time
-import pathlib
+from pathlib import Path
 
 
 INPUT_FILE_NAME = "test2_formated.xml"
@@ -72,7 +72,7 @@ class Timer:
 #-------------------------------------------------------------------------------
 def main():
     '''Configure elements to remove'''
-    current_dir = str(pathlib.Path(__file__).parent.resolve())
+    current_dir = str(Path(__file__).parent.resolve())
     print("current_dir: ", current_dir)
 
     file_name_in = current_dir + "/../test/" + INPUT_FILE_NAME
@@ -357,11 +357,41 @@ def remove_attributes_from_element(root, target_attributes):
 def write_outputfile_file(tree, file_out):
     '''
     Export ElementTree object to file
-    https://stackoverflow.com/questions/70893097/how-to-preserve-the-original-encoding-and-line-endings-when-writing-to-a-file
     '''
     timer = Timer("write_outputfile_file")
     tree.write(file_out, encoding="utf-8", xml_declaration=True)
     timer.print_result()
+
+#-------------------------------------------------------------------------------
+def write_linux_line_endings(file_in, file_out):
+    '''
+    https://stackoverflow.com/questions/36422107/how-to-convert-crlf-to-lf-on-a-windows-machine-in-python
+    https://stackoverflow.com/questions/20350305/python-read-crlf-text-file-as-is-with-crlf
+    https://stackoverflow.com/questions/9184107/how-can-i-force-pythons-file-write-to-use-the-same-newline-format-in-windows
+    https://stackoverflow.com/questions/70893097/how-to-preserve-the-original-encoding-and-line-endings-when-writing-to-a-file
+    '''
+    # replacement strings
+    WINDOWS_LINE_ENDING = b'\r\n'
+    UNIX_LINE_ENDING = b'\n'
+
+    file_size_begin = Path(file_in).stat().st_size
+    timer = Timer("write_linux_line_endings")
+
+    with open(file_in, 'rb') as open_file:
+        content = open_file.read()
+
+    # Windows --> Unix
+    content = content.replace(WINDOWS_LINE_ENDING, UNIX_LINE_ENDING)
+
+    with open(file_out, 'wb') as open_file:
+        open_file.write(content)
+
+    timer.print_result()
+    file_size_end = Path(file_out).stat().st_size
+
+    print("file_size_begin: ", file_size_begin)
+    print("file_size_end:   ", file_size_end)
+    print("delta:           ", file_size_begin - file_size_end)
 
 #-------------------------------------------------------------------------------
 def parse_input_file(file_in):

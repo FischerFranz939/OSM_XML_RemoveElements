@@ -14,6 +14,7 @@ python -m pytest --cov-report term --cov-report lcov:lcov.info --cov=script1 tes
 import xml.etree.ElementTree as ET
 import pathlib
 import filecmp
+import script1
 
 
 from script1 import remove_element_by_id
@@ -30,6 +31,7 @@ from script1 import is_node_id_referenced
 from script1 import number_of_relation_references
 from script1 import number_of_way_references
 from script1 import remove_buildings
+from script1 import write_linux_line_endings
 
 
 TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "/../test/"
@@ -584,6 +586,109 @@ def test_remove_buildings():
 
 # When
     remove_buildings(root)
+    xml_out = ET.tostring(root, encoding="unicode", method="xml")
+
+# Then
+    print_xmls(xml_in, xml_out, xml_expected)
+    #assert False
+    assert xml_expected == xml_out
+
+#-------------------------------------------------------------------------------
+def test_write_linux_line_endings():
+    '''Test - write_linux_line_endings'''
+# Given
+    xml_file_in = TEST_PATH + "test2_formated.xml"
+    xml_file_out = TEST_PATH + "test2_formated.output"
+    xml_file_expected = TEST_PATH + "test2_formated.expected"
+
+# When
+    write_linux_line_endings(xml_file_in, xml_file_out)
+
+# Then
+    result = filecmp.cmp(xml_file_expected, xml_file_out, shallow=False)
+    assert result is True
+
+#-------------------------------------------------------------------------------
+def test_adapt_elements_with_negative_id():
+    '''Test - adapt_elements_with_negative_id'''
+    # Given
+    xml_in = """<body>
+    <node id="-117276" action="modify" lat="67.04228469059" lon="16.53687049956" />
+    <way id='-268645799' action="modify" timestamp='2015-09-22T18:58:53Z' uid='548288' user='WayneSchlegel' visible='true' changeset='34190335'>
+        <nd ref='2739790961' />
+        <tag k='building' v='yes' />
+    </way>
+    <relation id="-18" action="modify" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start"/>
+        <tag k="type" v="route"/>
+    </relation>
+    </body>"""
+    xml_expected = """<body>
+    <node id="117276" lat="67.04228469059" lon="16.53687049956" version="1" />
+    <way id="268645799" timestamp="2015-09-22T18:58:53Z" uid="548288" user="WayneSchlegel" visible="true" changeset="34190335" version="1">
+        <nd ref="2739790961" />
+        <tag k="building" v="yes" />
+    </way>
+    <relation id="18" timestamp="2020-09-07T09:55:45Z" version="1">
+        <member type="node" ref="53376950" role="start" />
+        <tag k="type" v="route" />
+    </relation>
+    </body>"""
+    root = ET.fromstring(xml_in)
+
+# When
+    script1.adapt_elements_with_negative_id(root)
+    xml_out = ET.tostring(root, encoding="unicode", method="xml")
+
+# Then
+    print_xmls(xml_in, xml_out, xml_expected)
+    #assert False
+    assert xml_expected == xml_out
+
+#-------------------------------------------------------------------------------
+def test_remove_node_elements_with_no_reference():
+    '''Test - remove_node_elements_with_no_reference'''
+    # Given
+    xml_in = """<body>
+    <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start"/>
+        <member type="way" ref="521060220" role="both"/>
+        <member type="way" ref="240509448" role="both"/>
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia"/>
+        <tag k="type" v="route"/>
+    </relation>
+    <node id="3747488457" timestamp="2016-07-06T01:21:43Z" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
+    <node id="521060220" timestamp="2016-07-06T01:22:11Z" visible="true" version="15" changeset="40512409" lat="48.5243657" lon="9.3493966" />
+    <node id="60117351" timestamp="2016-07-06T01:22:11Z" visible="true" version="14" changeset="40512409" lat="48.5249231" lon="9.3488887" />
+    <node id="31287590" timestamp="2016-07-06T01:21:43Z" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
+    </body>"""
+    xml_expected = """<body>
+    <way id="371149002" version="1" timestamp="2015-09-17T10:44:37Z">
+        <nd ref="3721534116" />
+        <nd ref="3747488457" />
+        <nd ref="3747486121" />
+        <tag k="highway" v="path" />
+    </way>
+    <relation id="18" version="3" timestamp="2020-09-07T09:55:45Z">
+        <member type="node" ref="53376950" role="start" />
+        <member type="way" ref="521060220" role="both" />
+        <member type="way" ref="240509448" role="both" />
+        <tag k="ref" v="TET:EU:ES:GNR:02:Catalonia" />
+        <tag k="type" v="route" />
+    </relation>
+    <node id="3747488457" timestamp="2016-07-06T01:21:43Z" visible="true" version="3" changeset="40512409" lat="48.5288901" lon="9.3514616" />
+    <node id="521060220" timestamp="2016-07-06T01:22:11Z" visible="true" version="15" changeset="40512409" lat="48.5243657" lon="9.3493966" />
+    </body>"""
+    root = ET.fromstring(xml_in)
+
+# When
+    script1.remove_node_elements_with_no_reference(root)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
