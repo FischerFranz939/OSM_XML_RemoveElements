@@ -177,7 +177,8 @@ def test_remove_elements_by_subelement():
     v_attribute     = "tower"
 
 # When
-    script1.remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute)
+    script1.remove_elements_by_subelement(root, element_name, subelement_name, 
+                                          k_attribute, v_attribute)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then
