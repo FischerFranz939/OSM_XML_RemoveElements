@@ -12,12 +12,11 @@ python -m pytest --cov-report term --cov-report html:lcov_html --cov=script1 tes
 python -m pytest --cov-report term --cov-report lcov:lcov.info --cov=script1 test_script1.py
 '''
 import xml.etree.ElementTree as ET
-import pathlib
 import filecmp
 import script1
 
 
-TEST_PATH = str(pathlib.Path(__file__).parent.resolve()) + "/../test/"
+TEST_PATH = script1.get_current_dir(True) + "/../test/"
 
 
 #-------------------------------------------------------------------------------
@@ -544,8 +543,8 @@ def test_number_of_way_references_0():
     assert result == 0
 
 #-------------------------------------------------------------------------------
-def test_remove_buildings():
-    '''Test - remove_buildings'''
+def test_remove_buildings_and_nodes():
+    '''Test - remove_buildings and not referenced nodes'''
     # Given
     xml_in = """<body>
     <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
@@ -568,10 +567,50 @@ def test_remove_buildings():
         <tag k="name" v="Pica d'Estats" />
     </node>
     </body>"""
-    root                 = ET.fromstring(xml_in)
+    root         = ET.fromstring(xml_in)
+    remove_nodes = True
 
 # When
-    script1.remove_buildings(root)
+    script1.remove_buildings(root, remove_nodes)
+    xml_out = ET.tostring(root, encoding="unicode", method="xml")
+
+# Then
+    print_xmls(xml_in, xml_out, xml_expected)
+    #assert False
+    assert xml_expected == xml_out
+
+#-------------------------------------------------------------------------------
+def test_remove_buildings_only():
+    '''Test - remove_buildings only (do not remove nodes)'''
+    # Given
+    xml_in = """<body>
+    <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+        <tag k="name" v="Pica d&apos;Estats"/>
+    </node>
+    <way id='268645709' timestamp='2015-09-22T18:58:53Z' uid='548288' user='WayneSchlegel' visible='true' version='3' changeset='34190335'>
+        <nd ref='2739790961' />
+        <nd ref='2739790947' />
+        <nd ref='2739790961' />
+        <tag k='addr:city' v='Dettingen an der Erms' />
+        <tag k='addr:street' v='Sperberweg' />
+        <tag k='building' v='yes' />
+    </way>
+    <node id='2739790947' timestamp='2016-06-27T01:55:13Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.5316081' lon='9.359028' />
+    <node id='2739790961' timestamp='2016-06-27T01:55:14Z' uid='548288' user='WayneSchlegel' visible='true' version='2' changeset='40311689' lat='48.531868' lon='9.357414' />
+    </body>"""
+
+    xml_expected = """<body>
+    <node id="26864258" version="22" timestamp="2022-04-17T10:54:51Z" lat="42.666952" lon="1.3978986">
+        <tag k="name" v="Pica d'Estats" />
+    </node>
+    <node id="2739790947" timestamp="2016-06-27T01:55:13Z" uid="548288" user="WayneSchlegel" visible="true" version="2" changeset="40311689" lat="48.5316081" lon="9.359028" />
+    <node id="2739790961" timestamp="2016-06-27T01:55:14Z" uid="548288" user="WayneSchlegel" visible="true" version="2" changeset="40311689" lat="48.531868" lon="9.357414" />
+    </body>"""
+    root         = ET.fromstring(xml_in)
+    remove_nodes = False
+
+# When
+    script1.remove_buildings(root, remove_nodes)
     xml_out = ET.tostring(root, encoding="unicode", method="xml")
 
 # Then

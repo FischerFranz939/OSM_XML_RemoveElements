@@ -3,14 +3,7 @@ Performnce test script for script1
 
 python perftest_script1.py
 '''
-import pathlib
-
-
-from script1 import Timer
-from script1 import parse_input_file
-from script1 import can_node_be_removed
-from script1 import number_of_relation_references
-from script1 import number_of_way_references
+import script1
 
 
 INPUT_FILE_NAME = "andorra-latest.osm"
@@ -21,13 +14,12 @@ INPUT_FILE_NAME = "andorra-latest.osm"
 #-------------------------------------------------------------------------------
 def main():
     '''Configure elements to remove'''
-    current_dir = str(pathlib.Path(__file__).parent.resolve())
-    print("current_dir: ", current_dir)
+    current_dir = script1.get_current_dir(True)
 
     file_name_in = current_dir + "/../test/" + INPUT_FILE_NAME
     print("file_name_in: ", file_name_in)
 
-    tree = parse_input_file(file_name_in)
+    tree = script1.parse_input_file(file_name_in)
     root = tree.getroot()
 
     performance_remove_node_elements_with_no_reference(root)
@@ -65,7 +57,7 @@ def performance_remove_node_elements_with_no_reference(root):
 
     !!!! Python kann nur eine CPU nutzen !!!!
     '''
-    timer = Timer("performance_remove_node_elements_with_no_reference")
+    timer = script1.Timer("performance_remove_node_elements_with_no_reference")
 
     node_id_no_ref  = '64954477'   #andorra-latest.osm --> no references
     node_id_ref_way = '3020646532' #andorra-latest.osm --> reference to way
@@ -89,14 +81,14 @@ def performance_find_all_nodes(root):
     Count all nodes and all nodes which can not be removed.
     Criteria can be e.g. attributes in tags.
     '''
-    timer = Timer("performance_find_all_nodes")
+    timer = script1.Timer("performance_find_all_nodes")
 
     counter_nodes = 0
     counter_not_remove = 0
     for element in root.findall("node"):
         counter_nodes = counter_nodes + 1
         identifier = element.attrib.get("id")
-        remove = can_node_be_removed(element)
+        remove = script1.can_node_be_removed(element)
         if not remove:
             counter_not_remove = counter_not_remove + 1
             print("node can NOT be removed. id: ", identifier)
@@ -109,15 +101,15 @@ def performance_find_all_nodes(root):
 #-------------------------------------------------------------------------------
 def performance_number_of_relation_references(root, identifier):
     '''performance measurement - get number of relation references'''
-    timer = Timer("performance_number_of_relation_references")
-    number = number_of_relation_references(root, identifier)
+    timer = script1.Timer("performance_number_of_relation_references")
+    number = script1.number_of_relation_references(root, identifier)
     timer.print_result(create_key_value_string("found references", number))
 
 #-------------------------------------------------------------------------------
 def performance_number_of_way_references(root, identifier):
     '''Performance measurement - get number of way references'''
-    timer = Timer("performance_number_of_way_references")
-    number = number_of_way_references(root, identifier)
+    timer = script1.Timer("performance_number_of_way_references")
+    number = script1.number_of_way_references(root, identifier)
     timer.print_result(create_key_value_string("found references", number))
 
 #-------------------------------------------------------------------------------

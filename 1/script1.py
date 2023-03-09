@@ -64,7 +64,9 @@ class Timer:
     def print_result(self, additional_information=""):
         """Print result"""
         time_end = self.current_time_ms()
-        print(self.function_name, " in ms:", time_end - self.time_begin, additional_information)
+        time_used = time_end - self.time_begin
+        print(self.function_name, " in ms:", time_used, additional_information)
+        return time_used
 
 
 #-------------------------------------------------------------------------------
@@ -72,8 +74,7 @@ class Timer:
 #-------------------------------------------------------------------------------
 def main():
     '''Configure elements to remove'''
-    current_dir = str(Path(__file__).parent.resolve())
-    print("current_dir: ", current_dir)
+    current_dir = get_current_dir()
 
     file_name_in = current_dir + "/../test/" + INPUT_FILE_NAME
     file_name_out = current_dir + "/" + INPUT_FILE_NAME + ".output"
@@ -103,7 +104,7 @@ def main():
 #-------------------------------------------------------------------------------
 # Functions
 #-------------------------------------------------------------------------------
-def remove_buildings(root):
+def remove_buildings(root, remove_nodes=True):
     '''
     Get all "way" elements where the subelement name is "tag" and the subelement
     attribute "k" is "building".
@@ -118,7 +119,8 @@ def remove_buildings(root):
             references = get_element_references(element, "nd")
             references.pop() #remove last list-element, because first and last are the same
             root.remove(element) #remove, otherwise the nodes are still referenced
-            remove_nodes_if_not_referenced(root, references)
+            if remove_nodes:
+                remove_nodes_if_not_referenced(root, references)
     timer.print_result()
 
 #-------------------------------------------------------------------------------
@@ -374,7 +376,6 @@ def write_linux_line_endings(file_in, file_out):
     windows_line_endings = b'\r\n'
     unix_line_endings = b'\n'
 
-    file_size_begin = Path(file_in).stat().st_size
     timer = Timer("write_linux_line_endings")
 
     with open(file_in, 'rb') as open_file:
@@ -387,11 +388,6 @@ def write_linux_line_endings(file_in, file_out):
         open_file.write(content)
 
     timer.print_result()
-    file_size_end = Path(file_out).stat().st_size
-
-    print("file_size_begin: ", file_size_begin)
-    print("file_size_end:   ", file_size_end)
-    print("delta:           ", file_size_begin - file_size_end)
 
 #-------------------------------------------------------------------------------
 def parse_input_file(file_in):
@@ -400,6 +396,19 @@ def parse_input_file(file_in):
     tree = ET.parse(file_in)
     timer.print_result()
     return tree
+
+#-------------------------------------------------------------------------------
+def get_file_size(file_path):
+    '''Get file size'''
+    return Path(file_path).stat().st_size
+
+#-------------------------------------------------------------------------------
+def get_current_dir(print_dir=False):
+    '''Get current directory'''
+    current_dir = str(Path(__file__).parent.resolve())
+    if print_dir:
+        print("current_dir: ", current_dir)
+    return current_dir
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":
