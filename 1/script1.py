@@ -32,6 +32,7 @@ TODOs:
 '''
 import xml.etree.ElementTree as ET
 import time
+import inspect
 from pathlib import Path
 
 
@@ -74,10 +75,10 @@ class Timer:
 #-------------------------------------------------------------------------------
 def main():
     '''Configure elements to remove'''
-    current_dir = get_current_dir()
+    test_path = get_current_dir() + "/../test/"
 
-    file_name_in = current_dir + "/../test/" + INPUT_FILE_NAME
-    file_name_out = current_dir + "/" + INPUT_FILE_NAME + ".output"
+    file_name_in = test_path + INPUT_FILE_NAME
+    file_name_out = file_name_in + ".output"
     print("file_name_in: ", file_name_in)
     print("file_name_out: ", file_name_out)
 
@@ -113,7 +114,7 @@ def remove_buildings(root, remove_nodes=True):
     Remove not referenced "node" elements.
     Remove this element ("way").
     '''
-    timer = Timer("remove_buildings")
+    timer = Timer(str(inspect.stack()[0][3]))
     for element in root.findall("way"):
         if attributes_contained_in_subelement_k(element, "tag", "building"):
             references = get_element_references(element, "nd")
@@ -206,8 +207,7 @@ def adapt_elements_with_negative_id(root):
     Negate the ID.
     Replace action="modify" with version="1".
     '''
-    timer = Timer("adapt_elements_with_negative_id")
-
+    timer = Timer(str(inspect.stack()[0][3]))
     element_names = ["node", "way", "relation"]
 
     for element_name in element_names:
@@ -229,7 +229,7 @@ def adapt_subelements_with_negative_references(root):
     Negate the ID.
     For ways also remove the attribute "action".
     '''
-    timer = Timer("adapt_subelements_with_negative_references")
+    timer = Timer(str(inspect.stack()[0][3]))
 
     for element in root.findall("way"):
         for subelement in element.findall("nd"):
@@ -257,7 +257,7 @@ def change_negative_references_to_positive(root, x_path):
 #-------------------------------------------------------------------------------
 def remove_node_elements_with_no_reference(root, print_removed_elements=False):
     '''Remove node elements with no reference'''
-    timer = Timer("remove_node_elements_with_no_reference")
+    timer = Timer(str(inspect.stack()[0][3]))
     counter_nodes = 0
     counter_remove_nodes = 0
     for element in root.findall("node"):
@@ -309,7 +309,7 @@ def number_of_way_references(root, identifier):
 #-------------------------------------------------------------------------------
 def remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribute_wildcard):
     '''Remove subelement by wildcard'''
-    timer = Timer("remove_subelement_by_wildcard")
+    timer = Timer(str(inspect.stack()[0][3]))
     for element in root.findall(element_name):
         for subelement in element.findall(subelement_name):
             if k_attribute_wildcard in subelement.attrib.get("k"):
@@ -319,7 +319,7 @@ def remove_subelement_by_wildcard(root, element_name, subelement_name, k_attribu
 #-------------------------------------------------------------------------------
 def remove_elements_by_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
     '''Remove elements by subelement'''
-    timer = Timer("remove_elements_by_subelement")
+    timer = Timer(str(inspect.stack()[0][3]))
     for element in root.findall(element_name):
         if attributes_contained_in_subelement_kv(element, subelement_name, \
             k_attribute, v_attribute):
@@ -329,7 +329,7 @@ def remove_elements_by_subelement(root, element_name, subelement_name, k_attribu
 #-------------------------------------------------------------------------------
 def remove_subelement(root, element_name, subelement_name, k_attribute, v_attribute):
     '''Remove subelement by attributes'''
-    timer = Timer("remove_subelement")
+    timer = Timer(str(inspect.stack()[0][3]))
     for element in root.findall(element_name):
         for subelement in element.findall(subelement_name):
             if (subelement.attrib.get("k") == k_attribute) and \
@@ -340,7 +340,7 @@ def remove_subelement(root, element_name, subelement_name, k_attribute, v_attrib
 #-------------------------------------------------------------------------------
 def remove_attribute_from_element(root, target_attribute):
     '''Remove attribute from element'''
-    timer = Timer("remove_attribute_from_element")
+    timer = Timer(str(inspect.stack()[0][3]))
     x_path = "./*[@" + target_attribute + "]"
     for element in root.findall(x_path):
         #print(element.attrib[target_attribute])
@@ -350,7 +350,7 @@ def remove_attribute_from_element(root, target_attribute):
 #-------------------------------------------------------------------------------
 def remove_attributes_from_element(root, target_attributes):
     '''Remove attributes from element'''
-    timer = Timer("remove_attributes_from_element")
+    timer = Timer(str(inspect.stack()[0][3]))
     for target_attribute in target_attributes:
         remove_attribute_from_element(root, target_attribute)
     timer.print_result()
@@ -360,7 +360,7 @@ def write_outputfile_file(tree, file_out):
     '''
     Export ElementTree object to file
     '''
-    timer = Timer("write_outputfile_file")
+    timer = Timer(str(inspect.stack()[0][3]))
     tree.write(file_out, encoding="utf-8", xml_declaration=True)
     timer.print_result()
 
@@ -376,7 +376,7 @@ def write_linux_line_endings(file_in, file_out):
     windows_line_endings = b'\r\n'
     unix_line_endings = b'\n'
 
-    timer = Timer("write_linux_line_endings")
+    timer = Timer(str(inspect.stack()[0][3]))
 
     with open(file_in, 'rb') as open_file:
         content = open_file.read()
@@ -392,7 +392,7 @@ def write_linux_line_endings(file_in, file_out):
 #-------------------------------------------------------------------------------
 def parse_input_file(file_in):
     '''Import file to ElementTree object'''
-    timer = Timer("parse_input_file")
+    timer = Timer(str(inspect.stack()[0][3]))
     tree = ET.parse(file_in)
     timer.print_result()
     return tree
@@ -403,12 +403,9 @@ def get_file_size(file_path):
     return Path(file_path).stat().st_size
 
 #-------------------------------------------------------------------------------
-def get_current_dir(print_dir=False):
+def get_current_dir():
     '''Get current directory'''
-    current_dir = str(Path(__file__).parent.resolve())
-    if print_dir:
-        print("current_dir: ", current_dir)
-    return current_dir
+    return str(Path(__file__).parent.resolve())
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":

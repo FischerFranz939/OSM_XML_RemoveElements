@@ -16,7 +16,7 @@ import filecmp
 import script1
 
 
-TEST_PATH = script1.get_current_dir(True) + "/../test/"
+TEST_PATH = script1.get_current_dir() + "/../test/"
 
 
 #-------------------------------------------------------------------------------
@@ -59,7 +59,6 @@ def test_remove_element_by_id():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -87,7 +86,6 @@ def test_remove_attribute_from_element():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -115,7 +113,6 @@ def test_remove_attributes_from_element():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -149,7 +146,6 @@ def test_remove_subelement():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -182,7 +178,6 @@ def test_remove_elements_by_subelement():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -240,7 +235,6 @@ def test_remove_subelement_by_wildcard():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -274,7 +268,6 @@ def test_parse_input_file():
 
 # Then
     print_xmls("", xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -282,8 +275,8 @@ def test_write_outputfile_file():
     '''Test - write_outputfile_file'''
 # Given
     xml_file_in = TEST_PATH + "test3.xml"
-    xml_file_out = TEST_PATH + "test3.output"
-    xml_file_expected = TEST_PATH + "test3.expected"
+    xml_file_out = xml_file_in + ".output"
+    xml_file_expected = xml_file_in + ".expected"
     tree = script1.parse_input_file(xml_file_in)
 
 # When
@@ -576,7 +569,6 @@ def test_remove_buildings_and_nodes():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -615,7 +607,6 @@ def test_remove_buildings_only():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -623,8 +614,8 @@ def test_write_linux_line_endings():
     '''Test - write_linux_line_endings'''
 # Given
     xml_file_in = TEST_PATH + "test2_formated.xml"
-    xml_file_out = TEST_PATH + "test2_formated.output"
-    xml_file_expected = TEST_PATH + "test2_formated.expected"
+    xml_file_out = xml_file_in + ".output"
+    xml_file_expected = xml_file_in + ".expected"
 
 # When
     script1.write_linux_line_endings(xml_file_in, xml_file_out)
@@ -667,7 +658,6 @@ def test_adapt_elements_with_negative_id():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -718,7 +708,6 @@ def test_remove_node_elements_with_no_reference():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
@@ -763,5 +752,4 @@ def test_adapt_subelements_with_negative_references():
 
 # Then
     print_xmls(xml_in, xml_out, xml_expected)
-    #assert False
     assert xml_expected == xml_out
