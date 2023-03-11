@@ -14,6 +14,7 @@ from pathlib import Path
 INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
 #INPUT_FILE_NAME = "andorra-latest.osm"
 #INPUT_FILE_NAME = "test2_formated.xml"
+#INPUT_FILE_NAME = "test3.xml"
 
 TEST_PATH = script1.get_current_dir() + "/../test/"
 FILE_IN  = TEST_PATH + INPUT_FILE_NAME
@@ -70,8 +71,31 @@ class Report:
         return self.time_end - self.time_begin
 
     def stop_measurement(self):
+        '''End of measurement, stop time and get file size'''
         self.time_end = round(time.time() * 1000)
         self.file_size_end = Path(self.file_name_out).stat().st_size
+
+    def convert_bytes(self, bytes, indent=True):
+        '''Convert bytes to kB or MB'''
+        result = ""
+        kilo = 1024
+        indent_x ="           "
+
+        # return bytes
+        if bytes < kilo:
+            result = "byte:   " + str(bytes) + "\n"
+        # return kilo bytes
+        elif bytes > kilo and bytes < (kilo*kilo):
+            kb = round(bytes/kilo, 3)
+            result = "  kB:   " + str(kb) + "\n"
+        # return mega bytes
+        else:
+            mb = round(bytes/(kilo*kilo), 3)
+            result = "  MB:   " + str(mb) + "\n"
+
+        if indent:
+            result = indent_x + result
+        return result
 
     def write_report(self):
         '''Write result into report file'''
@@ -81,14 +105,15 @@ class Report:
         directory = os.path.dirname(self.file_name_in)
         file_in = os.path.basename(self.file_name_in)
         file_out = os.path.basename(self.file_name_out)
-        self.report_file.write("directory:        " + directory + "\n")
-        self.report_file.write("input file name:  " + file_in + "\n")
-        self.report_file.write("           byte:  " + str(self.file_size_begin) + "\n")
-        self.report_file.write("output file name: " + file_out + "\n")
-        self.report_file.write("            byte: " + str(self.file_size_end) + "\n")
-        self.report_file.write("savings in byte:  " + str(self.savings_byte()) + "\n")
-        self.report_file.write("     in percent:  " + str(self.savings_percent()) + "\n")
-        self.report_file.write("time used in ms:  " + str(self.time_used_ms()) + "\n\n")
+        self.report_file.write("directory:         " + directory + "\n")
+        self.report_file.write("input file name:   " + file_in + "\n")
+        self.report_file.write(self.convert_bytes(self.file_size_begin))
+        self.report_file.write("output file name:  " + file_out + "\n")
+        self.report_file.write(self.convert_bytes(self.file_size_end))
+        self.report_file.write("Savings    ")
+        self.report_file.write(self.convert_bytes(self.savings_byte(), False))
+        self.report_file.write("     in percent:   " + str(self.savings_percent()) + "\n")
+        self.report_file.write("time used in ms:   " + str(self.time_used_ms()) + "\n\n")
 
 
 #-------------------------------------------------------------------------------
