@@ -5,28 +5,96 @@ Calculate file size of outputfiles
 '''
 import xml.etree.ElementTree as ET
 import script1
+import os
+import inspect
+import time
+from pathlib import Path
 
 
-TEST_PATH = script1.get_current_dir(True) + "/../test/"
+INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
+#INPUT_FILE_NAME = "andorra-latest.osm"
+#INPUT_FILE_NAME = "test2_formated.xml"
+
+TEST_PATH = script1.get_current_dir() + "/../test/"
+FILE_IN  = TEST_PATH + INPUT_FILE_NAME
+REPORT_FILE_NAME = TEST_PATH + "Report_test_script2.output"
+REPORT_FILE = open(REPORT_FILE_NAME, "w")
 
 
 #-------------------------------------------------------------------------------
-# Functions
+# Class
 #-------------------------------------------------------------------------------
-def calculate_savings_in_byte(file_size_begin, file_size_end):
-    '''File size in byte'''
-    savings = file_size_begin - file_size_end
-    print("file_size_begin: ", file_size_begin)
-    print("file_size_end:   ", file_size_end)
-    print("savings in byte: ", savings)
-    return savings
+class Report:
+    '''Report measurements'''
+    file_name_in  = ""
+    file_name_out  = ""
+    file_size_begin = 0
+    file_size_end = 0
+    time_begin = 0
+    time_end = 0
+    function_name = ""
+    report_file = ""
+
+
+    def __init__(self, function_name, file_name_in, report_file):
+        """Init method"""
+        self.function_name = function_name
+        self.file_name_in = file_name_in
+        self.file_name_out = self.create_file_name_out()
+        self.report_file = report_file
+        self.file_size_begin = Path(file_name_in).stat().st_size
+        # start measurement
+        self.time_begin = round(time.time() * 1000)
+
+    def create_file_name_out(self):
+        '''Create name of outputfile file  '''
+        #file_name_in = os.path.splitext(self.file_name_in)[0]
+        return self.file_name_in + "-" + self.function_name + ".output"
+
+    def get_file_name_out(self):
+        '''Get output file name '''
+        return self.file_name_out
+
+    def savings_byte(self):
+        '''Difference between input- and output-file in byte'''
+        return self.file_size_begin - self.file_size_end
+
+    def savings_percent(self):
+        '''Difference between input- and output-file in percent'''
+        savings = 100 - (self.file_size_end/self.file_size_begin) * 100
+        savings = round(savings, 1)
+        return savings
+
+    def time_used_ms(self):
+        '''Time between start and end of measurement'''
+        return self.time_end - self.time_begin
+
+    def stop_measurement(self):
+        self.time_end = round(time.time() * 1000)
+        self.file_size_end = Path(self.file_name_out).stat().st_size
+
+    def write_report(self):
+        '''Write result into report file'''
+        self.stop_measurement()
+
+        self.report_file.write("----> " + self.function_name + " <----\n")
+        directory = os.path.dirname(self.file_name_in)
+        file_in = os.path.basename(self.file_name_in)
+        file_out = os.path.basename(self.file_name_out)
+        self.report_file.write("directory:        " + directory + "\n")
+        self.report_file.write("input file name:  " + file_in + "\n")
+        self.report_file.write("           byte:  " + str(self.file_size_begin) + "\n")
+        self.report_file.write("output file name: " + file_out + "\n")
+        self.report_file.write("            byte: " + str(self.file_size_end) + "\n")
+        self.report_file.write("savings in byte:  " + str(self.savings_byte()) + "\n")
+        self.report_file.write("     in percent:  " + str(self.savings_percent()) + "\n")
+        self.report_file.write("time used in ms:  " + str(self.time_used_ms()) + "\n\n")
+
 
 #-------------------------------------------------------------------------------
-def calculate_savings_in_percent(file_size_begin, file_size_end):
-    '''File size in percent'''
-    savings = 100 - (file_size_end/file_size_begin) * 100
-    print("savings in percent: ", savings)
-    return savings
+# Fixture
+#-------------------------------------------------------------------------------
+#@pytest.fixture(scope="session")
 
 
 #-------------------------------------------------------------------------------
@@ -35,53 +103,34 @@ def calculate_savings_in_percent(file_size_begin, file_size_end):
 def test_remove_buildings_and_nodes():
     '''Test - remove_buildings and not referenced nodes - file size'''
 # Given
-    file_in  = TEST_PATH + "Neuffen_unbearbeitet.osm"
-    file_out = TEST_PATH + "Neuffen_unbearbeitet.output"
-
-    timer = script1.Timer("test_remove_buildings_and_nodes")
-    file_size_begin = script1.get_file_size(file_in)
-
-    tree = script1.parse_input_file(file_in)
+    report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
+    tree = script1.parse_input_file(FILE_IN)
     root = tree.getroot()
     remove_nodes = True
 
 # When
     script1.remove_buildings(root, remove_nodes)
-    script1.write_outputfile_file(tree, file_out)
+    script1.write_outputfile_file(tree, report.get_file_name_out())
 
 # Then
-    timer.print_result()
-    file_size_end = script1.get_file_size(file_out)
-    savings_in_byte = calculate_savings_in_byte(file_size_begin, file_size_end)
-    savings_in_percent = calculate_savings_in_percent(file_size_begin, file_size_end)
-    assert savings_in_byte == 508275
-    assert savings_in_percent > 30
+    report.write_report()
 
 #-------------------------------------------------------------------------------
 def test_remove_buildings_only():
     '''Test - remove_buildings only (do not remove nodes) - file size'''
 # Given
-    file_in  = TEST_PATH + "Neuffen_unbearbeitet.osm"
-    file_out = TEST_PATH + "Neuffen_unbearbeitet.output"
-
-    timer = script1.Timer("test_remove_buildings_only")
-    file_size_begin = script1.get_file_size(file_in)
-
-    tree = script1.parse_input_file(file_in)
+    report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
+    tree = script1.parse_input_file(FILE_IN)
     root = tree.getroot()
     remove_nodes = False
 
 # When
     script1.remove_buildings(root, remove_nodes)
-    script1.write_outputfile_file(tree, file_out)
+    script1.write_outputfile_file(tree, report.get_file_name_out())
 
 # Then
-    timer.print_result()
-    file_size_end = script1.get_file_size(file_out)
-    savings_in_byte = calculate_savings_in_byte(file_size_begin, file_size_end)
-    savings_in_percent = calculate_savings_in_percent(file_size_begin, file_size_end)
-    assert savings_in_byte == 208563
-    assert savings_in_percent > 10
+    report.write_report()
 
-
-# TODO: generate result file
+#-------------------------------------------------------------------------------
+def test_close_report_file():
+    REPORT_FILE.close()
