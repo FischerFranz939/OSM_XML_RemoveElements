@@ -1,5 +1,5 @@
 '''
-Test script for script2
+Test script for script1 (report time and savings)
 
 Calculate file size of outputfiles
 '''

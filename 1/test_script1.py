@@ -1,5 +1,5 @@
 '''
-Test script for script1
+Test script for script1 (unit tests)
 
 https://pythontest.com/framework/pytest/pytest-introduction/
 
