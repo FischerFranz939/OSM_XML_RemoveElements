@@ -8,6 +8,7 @@ import script1
 import os
 import inspect
 import time
+import datetime
 from pathlib import Path
 
 
@@ -18,7 +19,7 @@ INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
 
 TEST_PATH = script1.get_current_dir() + "/../test/"
 FILE_IN  = TEST_PATH + INPUT_FILE_NAME
-REPORT_FILE_NAME = TEST_PATH + "Report_test_script2.output"
+REPORT_FILE_NAME = TEST_PATH + INPUT_FILE_NAME + "-test-REPORT.output"
 REPORT_FILE = open(REPORT_FILE_NAME, "w")
 
 
@@ -75,17 +76,9 @@ class Report:
         self.file_size_end = Path(self.file_name_out).stat().st_size
 
     def convert_ms(self):
-        '''Convert milliseconds to seconds'''
-        result = ""
-        milli = self.time_used_ms()
-        # return milliseconds
-        if milli < 1000:
-            result = "time used in ms:   " + str(milli) + "\n"
-        # return seconds
-        else:
-            seconds = round(milli/1000, 1)
-            result = "time used in  s:   " + str(seconds) + "\n"
-        return result
+        time_used = datetime.datetime.fromtimestamp(self.time_used_ms()/1000.0,
+                                                    tz=datetime.timezone.utc)
+        return "time used      :   " + time_used.strftime('%H:%M:%S.%f')
 
     def convert_bytes(self, bytes, indent=True):
         '''Convert bytes to kB or MB'''

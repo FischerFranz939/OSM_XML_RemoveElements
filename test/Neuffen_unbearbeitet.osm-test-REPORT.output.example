@@ -1,0 +1,36 @@
+>>>>>> test_remove_buildings_and_nodes <<<<<<
+input file name:   Neuffen_unbearbeitet.osm
+             MB:   1.6
+Savings      kB:   522.7
+     in percent:   32.8
+time used      :   00:00:05.599000
+>>>>>> test_remove_buildings_only <<<<<<
+input file name:   Neuffen_unbearbeitet.osm
+             MB:   1.6
+Savings      kB:   233.4
+     in percent:   14.6
+time used      :   00:00:00.176000
+>>>>>> test_remove_attributes_from_element <<<<<<
+input file name:   Neuffen_unbearbeitet.osm
+             MB:   1.6
+Savings      kB:   690.9
+     in percent:   43.4
+time used      :   00:00:00.148000
+>>>>>> test_remove_elements_by_subelement_power_tower <<<<<<
+input file name:   Neuffen_unbearbeitet.osm
+             MB:   1.6
+Savings      kB:   51.9
+     in percent:   3.3
+time used      :   00:00:00.158000
+>>>>>> test_remove_subelement_by_wildcard_wiki <<<<<<
+input file name:   Neuffen_unbearbeitet.osm
+             MB:   1.6
+Savings      kB:   42.6
+     in percent:   2.7
+time used      :   00:00:00.163000
+>>>>>> test_all <<<<<<
+input file name:   Neuffen_unbearbeitet.osm
+             MB:   1.6
+Savings      kB:   976.8
+     in percent:   61.3
+time used      :   00:00:05.349000
