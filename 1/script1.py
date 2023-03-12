@@ -409,11 +409,6 @@ def parse_input_file(file_in):
     return tree
 
 #-------------------------------------------------------------------------------
-def get_file_size(file_path):
-    '''Get file size'''
-    return Path(file_path).stat().st_size
-
-#-------------------------------------------------------------------------------
 def get_current_dir():
     '''Get current directory'''
     return str(Path(__file__).parent.resolve())
