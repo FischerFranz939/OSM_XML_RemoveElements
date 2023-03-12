@@ -14,7 +14,7 @@ INPUT_FILE_NAME = "andorra-latest.osm"
 #-------------------------------------------------------------------------------
 def main():
     '''Configure elements to remove'''
-    current_dir = script1.get_current_dir(True)
+    current_dir = script1.get_current_dir()
 
     file_name_in = current_dir + "/../test/" + INPUT_FILE_NAME
     print("file_name_in: ", file_name_in)
@@ -55,7 +55,7 @@ def performance_remove_node_elements_with_no_reference(root):
     4000 nodes processed in 470426 ms
     5000 nodes processed in 588397 ms
 
-    !!!! Python kann nur eine CPU nutzen !!!!
+    !!!! Python utilizes only one CPU !!!!
     '''
     timer = script1.Timer("performance_remove_node_elements_with_no_reference")
 
@@ -76,7 +76,7 @@ def performance_remove_node_elements_with_no_reference(root):
     timer.print_result()
 
 #-------------------------------------------------------------------------------
-def performance_find_all_nodes(root):
+def performance_find_all_nodes(root, print_nodes=False):
     '''
     Count all nodes and all nodes which can not be removed.
     Criteria can be e.g. attributes in tags.
@@ -91,7 +91,8 @@ def performance_find_all_nodes(root):
         remove = script1.can_node_be_removed(element)
         if not remove:
             counter_not_remove = counter_not_remove + 1
-            print("node can NOT be removed. id: ", identifier)
+            if print_nodes:
+                print("node can NOT be removed. id: ", identifier)
 
     print("  number of checked nodes:      ", counter_nodes)
     print("  number of nodes not to remove:", counter_not_remove)

@@ -36,7 +36,6 @@ class Report:
     function_name = ""
     report_file = ""
 
-
     def __init__(self, function_name, file_name_in, report_file):
         """Init method"""
         self.function_name = function_name
@@ -75,6 +74,19 @@ class Report:
         self.time_end = round(time.time() * 1000)
         self.file_size_end = Path(self.file_name_out).stat().st_size
 
+    def convert_ms(self):
+        '''Convert milliseconds to seconds'''
+        result = ""
+        milli = self.time_used_ms()
+        # return milliseconds
+        if milli < 1000:
+            result = "time used in ms:   " + str(milli) + "\n"
+        # return seconds
+        else:
+            seconds = round(milli/1000, 1)
+            result = "time used in  s:   " + str(seconds) + "\n"
+        return result
+
     def convert_bytes(self, bytes, indent=True):
         '''Convert bytes to kB or MB'''
         result = ""
@@ -85,12 +97,12 @@ class Report:
         if bytes < kilo:
             result = "byte:   " + str(bytes) + "\n"
         # return kilo bytes
-        elif bytes > kilo and bytes < (kilo*kilo):
-            kb = round(bytes/kilo, 3)
+        elif bytes >= kilo and bytes < (kilo*kilo):
+            kb = round(bytes/kilo, 1)
             result = "  kB:   " + str(kb) + "\n"
         # return mega bytes
         else:
-            mb = round(bytes/(kilo*kilo), 3)
+            mb = round(bytes/(kilo*kilo), 1)
             result = "  MB:   " + str(mb) + "\n"
 
         if indent:
@@ -101,19 +113,19 @@ class Report:
         '''Write result into report file'''
         self.stop_measurement()
 
-        self.report_file.write("----> " + self.function_name + " <----\n")
-        directory = os.path.dirname(self.file_name_in)
+        self.report_file.write(">>>>>> " + self.function_name + " <<<<<<\n")
+        #directory = os.path.dirname(self.file_name_in)
         file_in = os.path.basename(self.file_name_in)
-        file_out = os.path.basename(self.file_name_out)
-        self.report_file.write("directory:         " + directory + "\n")
+        #file_out = os.path.basename(self.file_name_out)
+        #self.report_file.write("directory:         " + directory + "\n")
         self.report_file.write("input file name:   " + file_in + "\n")
         self.report_file.write(self.convert_bytes(self.file_size_begin))
-        self.report_file.write("output file name:  " + file_out + "\n")
-        self.report_file.write(self.convert_bytes(self.file_size_end))
+        #self.report_file.write("output file name:  " + file_out + "\n")
+        #self.report_file.write(self.convert_bytes(self.file_size_end))
         self.report_file.write("Savings    ")
         self.report_file.write(self.convert_bytes(self.savings_byte(), False))
         self.report_file.write("     in percent:   " + str(self.savings_percent()) + "\n")
-        self.report_file.write("time used in ms:   " + str(self.time_used_ms()) + "\n\n")
+        self.report_file.write(self.convert_ms() + "\n")
 
 
 #-------------------------------------------------------------------------------
@@ -126,7 +138,7 @@ class Report:
 # Tests
 #-------------------------------------------------------------------------------
 def test_remove_buildings_and_nodes():
-    '''Test - remove_buildings and not referenced nodes - file size'''
+    '''Test - remove_buildings and not referenced nodes'''
 # Given
     report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
     tree = script1.parse_input_file(FILE_IN)
@@ -142,7 +154,7 @@ def test_remove_buildings_and_nodes():
 
 #-------------------------------------------------------------------------------
 def test_remove_buildings_only():
-    '''Test - remove_buildings only (do not remove nodes) - file size'''
+    '''Test - remove_buildings only (do not remove nodes)'''
 # Given
     report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
     tree = script1.parse_input_file(FILE_IN)
@@ -151,6 +163,83 @@ def test_remove_buildings_only():
 
 # When
     script1.remove_buildings(root, remove_nodes)
+    script1.write_outputfile_file(tree, report.get_file_name_out())
+
+# Then
+    report.write_report()
+
+#-------------------------------------------------------------------------------
+def test_remove_attributes_from_element():
+    '''Test - remove_attributes_from_element'''
+# Given
+    report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
+    tree = script1.parse_input_file(FILE_IN)
+    root = tree.getroot()
+    attribute_list = ["timestamp", "user", "uid", "changeset", "visible"]
+
+# When
+    script1.remove_attributes_from_element(root, attribute_list)
+    script1.write_outputfile_file(tree, report.get_file_name_out())
+
+# Then
+    report.write_report()
+
+#-------------------------------------------------------------------------------
+def test_remove_elements_by_subelement_power_tower():
+    '''Test - remove_elements_by_subelement power_tower'''
+# Given
+    report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
+    tree = script1.parse_input_file(FILE_IN)
+    root = tree.getroot()
+
+# When
+    script1.remove_elements_by_subelement(root, "node", "tag", "power", "tower")
+    script1.write_outputfile_file(tree, report.get_file_name_out())
+
+# Then
+    report.write_report()
+
+#-------------------------------------------------------------------------------
+def test_remove_subelement_by_wildcard_wiki():
+    '''Test - remove_subelement_by_wildcard wiki'''
+# Given
+    report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
+    tree = script1.parse_input_file(FILE_IN)
+    root = tree.getroot()
+
+# When
+    script1.remove_subelement_by_wildcard(root, "node", "tag", "wiki")
+    script1.remove_subelement_by_wildcard(root, "relation", "tag", "wiki")
+    script1.remove_subelement_by_wildcard(root, "way", "tag", "wiki")
+    script1.write_outputfile_file(tree, report.get_file_name_out())
+
+# Then
+    report.write_report()
+
+#-------------------------------------------------------------------------------
+def test_all():
+    '''Test - all'''
+# Given
+    report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
+    tree = script1.parse_input_file(FILE_IN)
+    root = tree.getroot()
+    remove_nodes = True
+    attribute_list = ["timestamp", "user", "uid", "changeset", "visible"]
+
+# When
+    script1.remove_buildings(root, remove_nodes)
+
+    script1.remove_attributes_from_element(root, attribute_list)
+
+    script1.remove_elements_by_subelement(root, "node", "tag", "power", "tower")
+
+    script1.remove_subelement_by_wildcard(root, "node", "tag", "wiki")
+    script1.remove_subelement_by_wildcard(root, "relation", "tag", "wiki")
+    script1.remove_subelement_by_wildcard(root, "way", "tag", "wiki")
+
+    script1.remove_subelement_by_wildcard(root, "node", "tag", "wiki")
+    script1.remove_subelement_by_wildcard(root, "relation", "tag", "wiki")
+    script1.remove_subelement_by_wildcard(root, "way", "tag", "wiki")
     script1.write_outputfile_file(tree, report.get_file_name_out())
 
 # Then

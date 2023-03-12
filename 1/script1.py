@@ -33,6 +33,7 @@ TODOs:
 import xml.etree.ElementTree as ET
 import time
 import inspect
+import os
 from pathlib import Path
 
 
@@ -356,12 +357,19 @@ def remove_attributes_from_element(root, target_attributes):
     timer.print_result()
 
 #-------------------------------------------------------------------------------
-def write_outputfile_file(tree, file_out):
+def write_outputfile_file(tree, file_out, linux_eol=True):
     '''
     Export ElementTree object to file
     '''
     timer = Timer(str(inspect.stack()[0][3]))
     tree.write(file_out, encoding="utf-8", xml_declaration=True)
+
+    if linux_eol:
+        file_name_tmp = file_out + ".tmp"
+        os.rename(file_out, file_name_tmp)
+        write_linux_line_endings(file_name_tmp, file_out)
+        os.remove(file_name_tmp)
+
     timer.print_result()
 
 #-------------------------------------------------------------------------------
@@ -372,17 +380,20 @@ def write_linux_line_endings(file_in, file_out):
     https://stackoverflow.com/questions/9184107/how-can-i-force-pythons-file-write-to-use-the-same-newline-format-in-windows
     https://stackoverflow.com/questions/70893097/how-to-preserve-the-original-encoding-and-line-endings-when-writing-to-a-file
     '''
-    # replacement strings
-    windows_line_endings = b'\r\n'
-    unix_line_endings = b'\n'
-
     timer = Timer(str(inspect.stack()[0][3]))
 
     with open(file_in, 'rb') as open_file:
         content = open_file.read()
 
-    # Windows --> Unix
+    # replacement strings; Windows --> Unix
+    windows_line_endings = b'\r\n'
+    unix_line_endings = b'\n'
     content = content.replace(windows_line_endings, unix_line_endings)
+
+    # remove space
+    space = b' />'
+    no_space = b'/>'
+    content = content.replace(space, no_space)
 
     with open(file_out, 'wb') as open_file:
         open_file.write(content)
