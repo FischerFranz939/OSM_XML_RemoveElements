@@ -39,6 +39,7 @@ from pathlib import Path
 
 INPUT_FILE_NAME = "test2_formated.xml"
 #INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
+#INPUT_FILE_NAME = "Neuffen_unbearbeitet_formated_lin.osm"
 #INPUT_FILE_NAME = "andorra-latest.osm"
 
 
@@ -97,7 +98,7 @@ def main():
     #remove_node_elements_with_no_reference(root, True)
 
     #adapt_elements_with_negative_id(root)
-    adapt_subelements_with_negative_references(root)
+    #adapt_subelements_with_negative_references(root)
     #remove_buildings(root)
 
     write_outputfile_file(tree, file_name_out)

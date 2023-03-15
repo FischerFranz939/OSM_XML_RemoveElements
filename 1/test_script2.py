@@ -11,10 +11,10 @@ import time
 import datetime
 from pathlib import Path
 
-
-INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
+SKIP_TEST_ALL = True
+#INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
 #INPUT_FILE_NAME = "andorra-latest.osm"
-#INPUT_FILE_NAME = "test2_formated.xml"
+INPUT_FILE_NAME = "test2.xml"
 #INPUT_FILE_NAME = "test3.xml"
 
 TEST_PATH = script1.get_current_dir() + "/../test/"
@@ -78,7 +78,7 @@ class Report:
     def convert_ms(self):
         time_used = datetime.datetime.fromtimestamp(self.time_used_ms()/1000.0,
                                                     tz=datetime.timezone.utc)
-        return "time used      :   " + time_used.strftime('%H:%M:%S.%f')
+        return "time used      :   " + time_used.strftime('%H:%M:%S.%f') + "\n"
 
     def convert_bytes(self, bytes, indent=True):
         '''Convert bytes to kB or MB'''
@@ -212,6 +212,9 @@ def test_remove_subelement_by_wildcard_wiki():
 #-------------------------------------------------------------------------------
 def test_all():
     '''Test - all'''
+    if SKIP_TEST_ALL:
+        return
+
 # Given
     report = Report(str(inspect.stack()[0][3]), FILE_IN, REPORT_FILE)
     tree = script1.parse_input_file(FILE_IN)

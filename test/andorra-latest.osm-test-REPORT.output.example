@@ -1,0 +1,35 @@
+>>>>>> test_remove_buildings_and_nodes <<<<<<
+input file name:   andorra-latest.osm
+             MB:   47.4
+Savings      MB:   4.7
+     in percent:   9.9
+time used      :   01:53:29.591000
+
+>>>>>> test_remove_buildings_only <<<<<<
+input file name:   andorra-latest.osm
+             MB:   47.4
+Savings      MB:   1.8
+     in percent:   3.7
+time used      :   00:00:50.065000
+
+>>>>>> test_remove_attributes_from_element <<<<<<
+input file name:   andorra-latest.osm
+             MB:   47.4
+Savings      MB:   11.0
+     in percent:   23.1
+time used      :   00:00:06.089000
+
+>>>>>> test_remove_elements_by_subelement_power_tower <<<<<<
+input file name:   andorra-latest.osm
+             MB:   47.4
+Savings      kB:   61.7
+     in percent:   0.1
+time used      :   00:00:06.735000
+
+>>>>>> test_remove_subelement_by_wildcard_wiki <<<<<<
+input file name:   andorra-latest.osm
+             MB:   47.4
+Savings      kB:   44.8
+     in percent:   0.1
+time used      :   00:00:06.219000
+
