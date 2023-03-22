@@ -48,9 +48,6 @@ INPUT_FILE_NAME = "test2_formated.xml"
 #-------------------------------------------------------------------------------
 class Timer:
     '''Timer for performance measurements'''
-    function_name = ""
-    time_begin = 0
-
     def __init__(self, function_name):
         """Init method"""
         self.function_name = function_name
@@ -388,8 +385,8 @@ def write_linux_line_endings(file_in, file_out):
 
     # replacement strings; Windows --> Unix
     windows_line_endings = b'\r\n'
-    unix_line_endings = b'\n'
-    content = content.replace(windows_line_endings, unix_line_endings)
+    linux_line_endings = b'\n'
+    content = content.replace(windows_line_endings, linux_line_endings)
 
     # remove space
     space = b' />'

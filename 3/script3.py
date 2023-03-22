@@ -16,7 +16,8 @@ from pathlib import Path
 #INPUT_FILE_NAME = "test2.xml"
 #INPUT_FILE_NAME = "test3.xml"
 #INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
-INPUT_FILE_NAME = "Neuffen_unbearbeitet_formated_win.osm"
+#INPUT_FILE_NAME = "Neuffen_unbearbeitet_formated_win.osm"
+INPUT_FILE_NAME = "Neuffen_unbearbeitet_formated_lin.osm"
 #INPUT_FILE_NAME = "andorra-latest.osm"
 
 TEST_PATH = str(Path(__file__).parent.resolve()) + "/../test/"
@@ -28,7 +29,10 @@ FILE_OUT = FILE_IN + "-script3.output"
 # Class
 #-------------------------------------------------------------------------------
 class Counter:
-    counters = dict()
+    '''Counts all first level elements per type'''
+    def __init__(self):
+        """Init method"""
+        self.counters = dict()
 
     def count_elements_per_type(self, element):
         '''Count elements per first level element type'''
@@ -51,28 +55,36 @@ class Counter:
 #-------------------------------------------------------------------------------
 def main():
     '''At a first step just count the first level elements per type'''
-    counter = Counter()
     numberOfElements = 0
-    
-    with open(FILE_OUT, mode="w", encoding="utf-8", newline="\n") as file:
-        file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
-        file.write("<osm version='0.6' generator='JOSM'>\n  ")
+    counter = Counter()
+
+    #windows_line_endings = b'\r\n'
+    #linux_line_endings = b'\n'
+    space = b' />'
+    no_space = b'/>'
+
+    with open(FILE_OUT, mode="wb") as file:
+    #with open(FILE_OUT, mode="wb", encoding="utf-8", newline="\n") as file:
+        file.write(b"<?xml version='1.0' encoding='UTF-8'?>\n")
+        file.write(b"<osm version='0.6' generator='JOSM'>\n  ")
 
         for element in get_next_first_level_element(FILE_IN):
+            numberOfElements = numberOfElements + 1
             counter.count_elements_per_type(element)
+
             #print("----------------------")
             #print(element.tag)
             #print(element.attrib)
-            element_string = ET.tostring(element, encoding='unicode', method='xml')
-            #print("xxxxxxxxxxxxxxxxxxxx")
-            # TODO: stops after line 142 ???
-            # maybe problem --> relations with tag and member...
-            #print(element_string)
-            #print("xxxxxxxxxxxxxxxxxxxx")
-            file.write(element_string)
-            numberOfElements = numberOfElements +1
+            #element_string = ET.tostring(element, encoding='unicode', method='xml')
+            byte_str = ET.tostring(element)
+            #byte_str = byte_str.replace(windows_line_endings, linux_line_endings)
+            #byte_str = byte_str.replace(b'/><node', b'/>\n<node')
+            byte_str = byte_str.replace(space, no_space)
 
-        file.write("</osm>")
+            file.write(byte_str)
+            file.flush()
+
+        file.write(b'</osm>')
         file.close()
         counter.print_counter_results()
         print("numberOfElements: " + str(numberOfElements))
@@ -83,7 +95,7 @@ def main():
 #-------------------------------------------------------------------------------
 def get_next_first_level_element(file_in):
     '''
-    Incrementally parse XML document into ElementTree. 
+    Incrementally parse XML document into ElementTree.
     Return one "first level"-element after the other, until end of file.
     '''
     context = iter(ET.iterparse(file_in, events=('start', 'end')))
