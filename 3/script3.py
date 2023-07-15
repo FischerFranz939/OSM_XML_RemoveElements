@@ -13,11 +13,11 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-#INPUT_FILE_NAME = "test2.xml"
+#INPUT_FILE_NAME = "test2_formated.xml"
 #INPUT_FILE_NAME = "test3.xml"
-#INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
+INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
 #INPUT_FILE_NAME = "Neuffen_unbearbeitet_formated_win.osm"
-INPUT_FILE_NAME = "Neuffen_unbearbeitet_formated_lin.osm"
+#INPUT_FILE_NAME = "Neuffen_unbearbeitet_formated_lin.osm"
 #INPUT_FILE_NAME = "andorra-latest.osm"
 
 TEST_PATH = str(Path(__file__).parent.resolve()) + "/../test/"
@@ -46,8 +46,12 @@ class Counter:
 
     def print_counter_results(self):
         '''Print number of first level elements per type'''
+        number_elements = 0
         for key, value in self.counters.items():
             print("number of " + key + ": " + str(value))
+            number_elements = number_elements + value
+
+        print("number_elements: " + str(number_elements))
 
 
 #-------------------------------------------------------------------------------
@@ -55,40 +59,43 @@ class Counter:
 #-------------------------------------------------------------------------------
 def main():
     '''At a first step just count the first level elements per type'''
-    numberOfElements = 0
     counter = Counter()
 
-    #windows_line_endings = b'\r\n'
-    #linux_line_endings = b'\n'
-    space = b' />'
-    no_space = b'/>'
+    windows_line_endings = '\r\n'
+    linux_line_endings = '\n'
 
-    with open(FILE_OUT, mode="wb") as file:
-    #with open(FILE_OUT, mode="wb", encoding="utf-8", newline="\n") as file:
-        file.write(b"<?xml version='1.0' encoding='UTF-8'?>\n")
-        file.write(b"<osm version='0.6' generator='JOSM'>\n  ")
+    with open(FILE_OUT, mode="w", encoding="utf-8") as file:
+        file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
+        file.write("<osm version='0.6' generator='JOSM'>\n  ")
 
+        add_blancs = False
         for element in get_next_first_level_element(FILE_IN):
-            numberOfElements = numberOfElements + 1
             counter.count_elements_per_type(element)
 
-            #print("----------------------")
-            #print(element.tag)
-            #print(element.attrib)
-            #element_string = ET.tostring(element, encoding='unicode', method='xml')
-            byte_str = ET.tostring(element)
-            #byte_str = byte_str.replace(windows_line_endings, linux_line_endings)
-            #byte_str = byte_str.replace(b'/><node', b'/>\n<node')
-            byte_str = byte_str.replace(space, no_space)
+            element_string = ET.tostring(element, encoding='unicode', method='xml')
 
-            file.write(byte_str)
+            # add blancs for the right indentation
+            if add_blancs:
+                element_string = "  " + element_string
+                add_blancs = False
+
+            # sometimes no line break is added to the element_string
+            index = element_string.find("\n")
+            if index == -1:
+                # add line break
+                element_string = element_string + "\n"
+                # make sure the next element_string has the right indentation
+                add_blancs = True
+
+            # replace " with ' (orginal setting)
+            element_string = element_string.replace("\"", "'")
+
+            file.write(element_string)
             file.flush()
 
-        file.write(b'</osm>')
+        file.write('</osm>' + "\n")
         file.close()
         counter.print_counter_results()
-        print("numberOfElements: " + str(numberOfElements))
-
 
 #-------------------------------------------------------------------------------
 # Functions
@@ -98,9 +105,7 @@ def get_next_first_level_element(file_in):
     Incrementally parse XML document into ElementTree.
     Return one "first level"-element after the other, until end of file.
     '''
-    context = iter(ET.iterparse(file_in, events=('start', 'end')))
-    _, root = next(context) # get root element
-
+    context = ET.iterparse(file_in, events=("start", "end"))
     for event, element in context:
         # do not stop for subelements
         if event == 'end' and (element.tag != "tag" and
@@ -108,7 +113,7 @@ def get_next_first_level_element(file_in):
                                element.tag != "member" and
                                element.tag != "osm"):
             yield element
-            root.clear() # free memory
+
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":
