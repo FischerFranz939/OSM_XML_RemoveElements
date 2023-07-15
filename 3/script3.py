@@ -61,8 +61,8 @@ def main():
     '''At a first step just count the first level elements per type'''
     counter = Counter()
 
-    windows_line_endings = '\r\n'
-    linux_line_endings = '\n'
+    WIN_NEWLINE = '\r\n'
+    UNIX_NEWLINE = '\n'
 
     with open(FILE_OUT, mode="w", encoding="utf-8") as file:
         file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
@@ -80,7 +80,7 @@ def main():
                 add_blancs = False
 
             # sometimes no line break is added to the element_string
-            index = element_string.find("\n")
+            index = element_string[-4:].find("\n")
             if index == -1:
                 # add line break
                 element_string = element_string + "\n"
