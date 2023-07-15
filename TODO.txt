@@ -1,0 +1,15 @@
+import xml.etree.ElementTree as ET
+
+# Öffnen Sie die XML-Datei
+tree = ET.parse('karte.xml')
+root = tree.getroot()
+
+# Durchlaufen Sie alle Elemente in der Karte
+for element in root.findall('.//'):
+    # Überprüfen Sie, ob das Element ein kleines Gewässer ist
+    if element.tag == 'water' and element.attrib['area'] < 100:
+        # Entfernen Sie das Element aus der Karte
+        root.remove(element)
+
+# Speichern Sie die bearbeitete Karte in einer neuen Datei
+tree.write('karte_ohne_kleine_gewaesser.xml')
