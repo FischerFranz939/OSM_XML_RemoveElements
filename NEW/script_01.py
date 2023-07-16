@@ -9,7 +9,8 @@ import time
 import inspect
 
 
-INPUT_FILE_NAME = "test_00.osm"
+#INPUT_FILE_NAME = "test_00.osm"
+INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"
 TEST_PATH = str(Path(__file__).parent.resolve()) + "/"
 FILE_IN  = TEST_PATH + INPUT_FILE_NAME
 FILE_OUT = FILE_IN + ".output"
@@ -82,6 +83,14 @@ def main():
         for element in get_next_first_level_element(FILE_IN):
             counter.count_elements_per_type(element)
 
+            ################ actions ################
+            change_version(element)
+
+            target_attributes = ["timestamp", "user", "uid", "changeset", "visible"]
+            remove_attributes_from_element(element, target_attributes)
+
+            ################ actions ################
+
             element_string = ET.tostring(element, encoding='unicode', method='xml')
             element_string, add_blank = fix_line_breaks(element_string, add_blank)
 
@@ -89,7 +98,7 @@ def main():
             #element_string = element_string.replace("\"", "'")
             # <tag k='operator' v='McDonald&apos;s' />   original
             # <tag k='operator' v='McDonald's' />        output
-            # 
+            #
             # now:
             # <tag k="operator" v="McDonald's" />        output
 
@@ -117,7 +126,7 @@ def fix_line_breaks(element_string, add_blank):
         element_string = element_string + "\n"
         # make sure the next element_string has the right indentation
         add_blank = True
-    
+
     return element_string, add_blank
 
 #-------------------------------------------------------------------------------
@@ -136,22 +145,16 @@ def get_next_first_level_element(file_in):
             yield element
 
 #-------------------------------------------------------------------------------
-def remove_attribute_from_element(root, target_attribute):
-    '''Remove attribute from element'''
-    timer = Timer(str(inspect.stack()[0][3]))
-    x_path = "./*[@" + target_attribute + "]"
-    for element in root.findall(x_path):
-        #print(element.attrib[target_attribute])
-        del element.attrib[target_attribute]
-    timer.print_result()
+def remove_attributes_from_element(element, target_attributes):
+    for target_attribute in target_attributes:
+        if element.attrib.get(target_attribute):
+            del element.attrib[target_attribute]
 
 #-------------------------------------------------------------------------------
-def remove_attributes_from_element(root, target_attributes):
-    '''Remove attributes from element'''
-    timer = Timer(str(inspect.stack()[0][3]))
-    for target_attribute in target_attributes:
-        remove_attribute_from_element(root, target_attribute)
-    timer.print_result()
+def change_version(element):
+    #print("element: " +  ET.tostring(element, encoding='unicode', method='xml'))
+    if element.attrib.get("version"):
+        element.set("version", "1")
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":
