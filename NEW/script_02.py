@@ -1,5 +1,5 @@
 '''
-Script 01 to remove unwanted elements/attributes from XML.
+Script 02 to remove unwanted elements/attributes from XML.
 - processes element by element of the input XML-file
 - only operations per element are possible
 '''
@@ -11,11 +11,11 @@ import os
 
 
 #INPUT_FILE_NAME = "test_00.osm"
-INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"          # file: Daten_00
-PATH = str(Path(__file__).parent.resolve()) + "\\"    # path to file Daten_00
+INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"          # file: Daten_01
+PATH = str(Path(__file__).parent.resolve()) + "\\"    # path to file Daten_01
 FILE_IN_NAME  = PATH + INPUT_FILE_NAME
-FILE_OUT_NAME = PATH + "Daten_01.output"              # file: Daten_01
-REPORT_FILE_NAME = PATH + "Daten_01-REPORT.output"
+FILE_OUT_NAME = PATH + "Daten_02.output"              # file: Daten_02
+REPORT_FILE_NAME = PATH + "Daten_02-REPORT.output"
 
 
 #-------------------------------------------------------------------------------
@@ -166,14 +166,15 @@ class Timer:
 #-------------------------------------------------------------------------------
 def main():
     '''At a first step just count the first level elements per type'''
-    report = Report(str("script_01"), FILE_IN_NAME, FILE_OUT_NAME, REPORT_FILE_NAME)
-    timer = Timer("script_01")
+    report = Report(str("script_02"), FILE_IN_NAME, FILE_OUT_NAME, REPORT_FILE_NAME)
+    timer = Timer("script_02")
     counter = Counter()
 
     print("FILE_IN_NAME:     " + FILE_IN_NAME)
     print("FILE_OUT_NAME:    " + FILE_OUT_NAME)
     print("REPORT_FILE_NAME: " + REPORT_FILE_NAME)
-    
+
+    number_of_deleted_relations = 0
     with open(FILE_OUT_NAME, mode="w", encoding="utf-8") as file:
         file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
         file.write("<osm version='0.6' generator='JOSM'>\n  ")
@@ -183,30 +184,41 @@ def main():
             counter.count_elements_per_type(element)
 
             ################ actions ################
-            change_version(element)
+            route_list = ['bus','train','railway','bicycle','hiking','ferry','subway']
+            restriction_list = ['no_left_turn','no_right_turn','only_left_turn',
+                                'only_right_turn','only_straight_on','no_u_turn']
+            type_list = ['addr:postcode','addr:city']
 
-            target_attributes = ["timestamp", "user", "uid", "changeset", "visible"]
-            remove_attributes_from_element(element, target_attributes)
+            tags_to_remove = dict([
+                ("route", route_list),
+                ("restriction", restriction_list),
+                ("type", type_list)
+                ])
 
+            remove_element = is_relation_with_tag(element, tags_to_remove)
             ################ actions ################
 
-            element_string = ET.tostring(element, encoding='unicode', method='xml')
-            element_string, add_blank = fix_line_breaks(element_string, add_blank)
+            if remove_element:
+                number_of_deleted_relations = number_of_deleted_relations + 1
+            else:
+                element_string = ET.tostring(element, encoding='unicode', method='xml')
+                element_string, add_blank = fix_line_breaks(element_string, add_blank)
 
-            # replace " with ' (orginal setting)
-            #element_string = element_string.replace("\"", "'")
-            # <tag k='operator' v='McDonald&apos;s' />   original
-            # <tag k='operator' v='McDonald's' />        output
-            #
-            # now:
-            # <tag k="operator" v="McDonald's" />        output
+                # replace " with ' (orginal setting)
+                #element_string = element_string.replace("\"", "'")
+                # <tag k='operator' v='McDonald&apos;s' />   original
+                # <tag k='operator' v='McDonald's' />        output
+                #
+                # now:
+                # <tag k="operator" v="McDonald's" />        output
 
-            file.write(element_string)
-            file.flush()
+                file.write(element_string)
+                file.flush()
 
         file.write('</osm>' + "\n")
         file.close()
     counter.print_counter_results()
+    print("deleted relations: " + str(number_of_deleted_relations))
     timer.print_result()
     report.write_report()
 
@@ -246,16 +258,21 @@ def get_next_first_level_element(file_in):
             yield element
 
 #-------------------------------------------------------------------------------
-def remove_attributes_from_element(element, target_attributes):
-    for target_attribute in target_attributes:
-        if element.attrib.get(target_attribute):
-            del element.attrib[target_attribute]
-
-#-------------------------------------------------------------------------------
-def change_version(element):
-    #print("element: " +  ET.tostring(element, encoding='unicode', method='xml'))
-    if element.attrib.get("version"):
-        element.set("version", "1")
+    '''
+    Check given list for relations to be removed
+    '''
+def is_relation_with_tag(element, tags_to_remove):
+    found = False
+    if element.tag == "relation":
+        # for each tag in relation
+        for subelement in element.findall("tag"):
+            # is the key in the dictionary and
+            # is the value in the list?
+            list = tags_to_remove.get(subelement.attrib.get("k"))
+            if (list != None) and (subelement.attrib.get("v") in list):
+                found = True
+                break
+    return found
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":

@@ -67,6 +67,7 @@ def test_remove_attributes_from_element():
         <tag k="type" v="provides_feature" />
     </relation>
     """
+
     target_attributes = ["timestamp", "user", "uid", "changeset", "visible"]
     input_file = StringIO(xml_in)
 
@@ -113,6 +114,7 @@ def test_change_version():
         <tag k="type" v="provides_feature" />
     </relation>
     """
+
     input_file = StringIO(xml_in)
 
 # When
