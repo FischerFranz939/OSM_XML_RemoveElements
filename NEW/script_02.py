@@ -10,11 +10,11 @@ import datetime
 import os
 
 
-#INPUT_FILE_NAME = "test_00.osm"
-INPUT_FILE_NAME = "Neuffen_unbearbeitet.osm"          # file: Daten_01
-PATH = str(Path(__file__).parent.resolve()) + "\\"    # path to file Daten_01
+#INPUT_FILE_NAME =        "Daten_00.osm"            # for test purposes
+INPUT_FILE_NAME =         "Daten_01.output"         # file: Daten_01
+PATH = str(Path(__file__).parent.resolve()) + "\\"  # path to file Daten_01 (current directory)
 FILE_IN_NAME  = PATH + INPUT_FILE_NAME
-FILE_OUT_NAME = PATH + "Daten_02.output"              # file: Daten_02
+FILE_OUT_NAME = PATH    + "Daten_02.output"         # file: Daten_02
 REPORT_FILE_NAME = PATH + "Daten_02-REPORT.output"
 
 
