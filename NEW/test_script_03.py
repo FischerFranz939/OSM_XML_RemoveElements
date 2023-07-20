@@ -207,6 +207,56 @@ def test_remove_node_by_tag_kv_02():
     assert xml_expected == xml_out
 
 #-------------------------------------------------------------------------------
+def test_remove_node_by_tag_kv_03():
+    '''Test - remove_node_by_tag_kv_03'''
+# Given
+    xml_in = """<body>
+    <node id="2949394270" version="1" lat="59.3193809" lon="18.0655601">
+        <tag k="craft" v="jeweller" />
+        <tag k="email" v="smideochform@gmail.com" />
+        <tag k="name" v="Smide och Form" />
+        <tag k="opening_hours" v="Mo-Fr 10:00-18:00;Sa 11:00-15:00" />
+        <tag k="phone" v="+46-8-6414781" />
+        <tag k="shop" v="jewelry" />
+        <tag k="website" v="https://www.smideochform.se/" />
+    </node>
+    <node id="10940046167" version="1" lat="59.3261145" lon="18.0614215">
+        <tag k="highway" v="street_lamp" />
+    </node>
+    </body>"""
+
+    xml_expected = """<node id="2949394270" version="1" lat="59.3193809" lon="18.0655601">
+        <tag k="craft" v="jeweller" />
+        <tag k="email" v="smideochform@gmail.com" />
+        <tag k="name" v="Smide och Form" />
+        <tag k="opening_hours" v="Mo-Fr 10:00-18:00;Sa 11:00-15:00" />
+        <tag k="phone" v="+46-8-6414781" />
+        <tag k="shop" v="jewelry" />
+        <tag k="website" v="https://www.smideochform.se/" />
+    </node>
+    <node id="10940046167" version="1" lat="59.3261145" lon="18.0614215">
+        <tag k="highway" v="street_lamp" />
+    </node>
+    """
+
+    key_value_pair1 = ['craft','xxxx']
+    key_value_pair2 = ['highway','xxxx']
+    kv_list = [key_value_pair1, key_value_pair2]
+    input_file = StringIO(xml_in)
+
+# When
+    xml_out = ""
+    for element in script_03.get_next_first_level_element(input_file):
+        if element.tag != "body":
+            remove = script_03.remove_node_by_tag_kv(element, kv_list)
+            if remove == False:
+                xml_out =  xml_out + ET.tostring(element, encoding="unicode", method="xml")
+
+# Then
+    print_xmls(xml_in, xml_out, xml_expected)
+    assert xml_expected == xml_out
+
+#-------------------------------------------------------------------------------
 def test_remove_tags():
     '''Test - remove_tags'''
 # Given
