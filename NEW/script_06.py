@@ -186,7 +186,8 @@ def main():
             remove_element = remove_action_delete_elements(element)
 
             if remove_element == False:
-                handle_action_modify_elements(element)
+                target_attributes = ["timestamp", "user", "uid", "changeset", "visible"]                
+                handle_action_modify_elements(element, target_attributes)
 
             ################ actions ################
 
@@ -258,7 +259,7 @@ def remove_action_delete_elements(element):
     return remove
 
 #-------------------------------------------------------------------------------
-def handle_action_modify_elements(element):
+def handle_action_modify_elements(element, target_attributes):
     if element.attrib.get("action") == 'modify':
         attrib_id = int(element.attrib.get("id"))
         if attrib_id < 0:
@@ -270,8 +271,9 @@ def handle_action_modify_elements(element):
 
         adapt_subelements_with_negative_references(element)
 
-        target_attributes = ["timestamp", "user", "uid", "changeset", "visible"]
-        remove_attributes_from_element(element, target_attributes)
+    # for all elements (potentialy reloaded)
+    remove_attributes_from_element(element, target_attributes)
+    change_version(element)
 
 #-------------------------------------------------------------------------------
 def adapt_subelements_with_negative_references(element):
@@ -285,6 +287,11 @@ def remove_attributes_from_element(element, target_attributes):
     for target_attribute in target_attributes:
         if element.attrib.get(target_attribute):
             del element.attrib[target_attribute]
+
+#-------------------------------------------------------------------------------
+def change_version(element):
+    if element.attrib.get("version"):
+        element.set("version", "1")
 
 #-------------------------------------------------------------------------------
 if __name__== "__main__":

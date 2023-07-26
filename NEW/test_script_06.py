@@ -83,6 +83,18 @@ def test_handle_action_modify_elements():
     '''Test - handle_action_modify_elements'''
 # Given
     xml_in = """<body>
+    <node id='119044' timestamp='2019-11-10T18:18:34Z' uid='83501' user='riiga' visible='true' version='5' changeset='76875955' lat='59.3211049' lon='18.0549223' />
+    <way id='1186083653' timestamp='2023-06-30T21:25:21Z' uid='13583335' user='segikip544' visible='true' version='1' changeset='137974638'>
+        <nd ref='11016755871' />
+        <nd ref='11016755870' />
+        <nd ref='11016755869' />
+        <tag k='waterway' v='ditch' />
+    </way>
+    <relation id='15636238' timestamp='2023-03-24T08:46:20Z' uid='76269' user='Snusmumriken' visible='true' version='1' changeset='134055375'>
+        <member type='node' ref='4970897646' role='target' />
+        <member type='node' ref='1787546752' role='address' />
+        <tag k='type' v='provides_feature' />
+    </relation>
     <node id='-191378' action='modify' visible='true' lat='59.1935366274' lon='18.22534052721' />
     <node id='-191379' action='modify' visible='true' lat='59.19367836951' lon='18.22585254261' />
     <node id='119039' visible='true' version='1' lat='59.3206968' lon='18.0454426' />
@@ -103,9 +115,21 @@ def test_handle_action_modify_elements():
     <node id='257' timestamp='2008-12-30T04:35:26Z' uid='865' user='ken' visible='true' version='3' changeset='67' lat='59.20698' lon='18.2153434' />
     </body>"""
 
-    xml_expected = """<node id="191378" lat="59.1935366274" lon="18.22534052721" version="1" />
+    xml_expected = """<node id="119044" version="1" lat="59.3211049" lon="18.0549223" />
+    <way id="1186083653" version="1">
+        <nd ref="11016755871" />
+        <nd ref="11016755870" />
+        <nd ref="11016755869" />
+        <tag k="waterway" v="ditch" />
+    </way>
+    <relation id="15636238" version="1">
+        <member type="node" ref="4970897646" role="target" />
+        <member type="node" ref="1787546752" role="address" />
+        <tag k="type" v="provides_feature" />
+    </relation>
+    <node id="191378" lat="59.1935366274" lon="18.22534052721" version="1" />
     <node id="191379" lat="59.19367836951" lon="18.22585254261" version="1" />
-    <node id="119039" visible="true" version="1" lat="59.3206968" lon="18.0454426" />
+    <node id="119039" version="1" lat="59.3206968" lon="18.0454426" />
     <way id="148364" version="1">
         <nd ref="2893802104" />
         <nd ref="191378" />
@@ -120,15 +144,16 @@ def test_handle_action_modify_elements():
         <nd ref="27527823" />
         <tag k="name" v="Kungsträdgården" />
     </way>
-    <node id="257" timestamp="2008-12-30T04:35:26Z" uid="865" user="ken" visible="true" version="3" changeset="67" lat="59.20698" lon="18.2153434" />
+    <node id="257" version="1" lat="59.20698" lon="18.2153434" />
     """
+    target_attributes = ["timestamp", "user", "uid", "changeset", "visible"]                
     input_file = StringIO(xml_in)
 
 # When
     xml_out = ""
     for element in script_06.get_next_first_level_element(input_file):
         if element.tag != "body":
-            script_06.handle_action_modify_elements(element)
+            script_06.handle_action_modify_elements(element, target_attributes)
             xml_out =  xml_out + ET.tostring(element, encoding="unicode", method="xml")
 
 # Then
