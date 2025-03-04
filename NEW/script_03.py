@@ -9,12 +9,12 @@ import time
 import datetime
 import os
 
-INPUT_FILE_NAME =        "Daten_00.osm"            # for test purposes
+INPUT_FILE_NAME =        "sweden_02.osm"            # for test purposes
 #INPUT_FILE_NAME =         "Daten_02.output"         # file: Daten_02
 PATH = str(Path(__file__).parent.resolve()) + "\\"  # path to file Daten_02 (current directory)
 FILE_IN_NAME  = PATH + INPUT_FILE_NAME
-FILE_OUT_NAME = PATH    + "Daten_03.output"         # file: Daten_03
-REPORT_FILE_NAME = PATH + "Daten_03-REPORT.output"
+FILE_OUT_NAME = PATH    + "sweden_03.osm"         # file: Daten_03
+REPORT_FILE_NAME = PATH + "sweden_03-REPORT.output"
 
 
 #-------------------------------------------------------------------------------
@@ -190,15 +190,24 @@ def main():
             #---------------------------------------------------------------------------
             if remove_element == False:
                 key_value_pair1 = ['highway','street_lamp']
-                key_value_pair2 = ['shop','jewelry']
-                kv_list = [key_value_pair1, key_value_pair2]
+                key_value_pair2 = ['highway','give_way']
+                key_value_pair3 = ['natural','tree']
+                key_value_pair4 = ['place','suburb']
+                key_value_pair5 = ['place','hamlet']
+                key_value_pair6 = ['place','neighbourhood']
+                key_value_pair7 = ['place','city_block']
+                key_value_pair8 = ['place','isolated_dwelling']
+                key_value_pair9 = ['turism','artwork']
+                
+                kv_list = [key_value_pair1, key_value_pair2, key_value_pair3, key_value_pair4, key_value_pair5, key_value_pair6, key_value_pair7,
+                            key_value_pair8, key_value_pair9]
                 remove_element = remove_node_by_tag_kv(element, kv_list)
 
             #---------------------------------------------------------------------------
             if remove_element == False:
                 amenity_white_list = ['biergarten','cafe','restaurant','bus_station','ferry_terminal',
-                                'parking,clinic','hospital','ranger_station','drinking_water','shelter',
-                                'shower,toilets','water_point','dive_centre','grave_yard','monastery',
+                                'parking','clinic','hospital','ranger_station','drinking_water','shelter',
+                                'shower','toilets','water_point','dive_centre','grave_yard','monastery',
                                 'place_of_worship','public_bath']
                 tags = dict([
                     ("amenity", amenity_white_list)
@@ -207,13 +216,16 @@ def main():
 
             #---------------------------------------------------------------------------
             if remove_element == False:
-                tag_keys = ['source','survey:date','created_by','wikidata','wikipedia']
+                tag_keys = ['source','survey:date','created_by','wikidata','wikipedia','building:colour','building:levels','building:material','roof:colour',
+                            'opening_hours','phone','website','contact:website','facebook','fax','email','cuisine','internet_access','internet_access','internet_access:fee',
+                            'check_date','description','fixme']
                 remove_tags(element, tag_keys)
 
             #---------------------------------------------------------------------------
             if remove_element == False:
                 name_white_list = ['name','name:de','name:en','name:se']
-                addr_whit_list = ['addr:housenumber']
+                addr_whit_list = []
+                # 'addr:housenumber' aus addr_whit_list erst mal entfernt
                 tags = dict([
                     ("name", name_white_list),
                     ("addr", addr_whit_list)

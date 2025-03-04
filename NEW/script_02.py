@@ -10,12 +10,12 @@ import datetime
 import os
 
 
-#INPUT_FILE_NAME =        "Daten_00.osm"            # for test purposes
-INPUT_FILE_NAME =         "Daten_01.output"         # file: Daten_01
-PATH = str(Path(__file__).parent.resolve()) + "\\"  # path to file Daten_01 (current directory)
+#INPUT_FILE_NAME = "test_00.osm"
+INPUT_FILE_NAME = "sweden_01.osm"          # file: Daten_01
+PATH = str(Path(__file__).parent.resolve()) + "\\"    # path to file Daten_01
 FILE_IN_NAME  = PATH + INPUT_FILE_NAME
-FILE_OUT_NAME = PATH    + "Daten_02.output"         # file: Daten_02
-REPORT_FILE_NAME = PATH + "Daten_02-REPORT.output"
+FILE_OUT_NAME = PATH + "sweden_02.osm"              # file: Daten_02
+REPORT_FILE_NAME = PATH + "sweden_02-REPORT.output"
 
 
 #-------------------------------------------------------------------------------
@@ -184,14 +184,24 @@ def main():
             counter.count_elements_per_type(element)
 
             ################ actions ################
-            route_list = ['bus','train','railway','bicycle','hiking','ferry','subway']
-            restriction_list = ['no_left_turn','no_right_turn','only_left_turn',
-                                'only_right_turn','only_straight_on','no_u_turn']
-            type_list = ['addr:postcode','addr:city']
+            route_list = ['bus','trolleybus','road','car','train','railway','light_rail','tram','subway','bicycle','mtb','mtb;foot','foot',
+                          'hiking','running','hiking;running','foot;running','running;foot','hiking;ski','hiking;mtb',
+                          'mtb;hiking','mtb;bicycle','foot;bicycle','bicycle;foot','bicycle;hiking','draisine','walking','fitness_trail',
+                          'ferry','piste','piste;foot;running','ski','Skiing','roller_ski','ice_skates','snowmobile','horse','historic',
+                          'historic_railway','power','pipeline','detour','canal','tracks','sleigh','waterway']
+            # alle Routen ausser 'canoe' und einige "type=route", die wegen fehlendem tagging "route=xxx" nicht erfasst werden
+            route_master_list = ['road','bus','trolleybus','foot','running','train','light_rail','tram','subway','ferry','ski']
+            superroute_list = ['bus']
+            #restriction_list = ['no_left_turn','no_right_turn','only_left_turn','only_right_turn','only_straight_on','no_u_turn','no_straight_on','no_entry','no_exit']
+            # alle Restriction enthalten, deswegen "restriction" in "type_list" übernommen
+            type_list = ['restriction','addr:postcode','addr:city','associatedStreet','public_transport','enforcement','abandonet:route','network','old:route',
+                         'planned:route','construction:route']
 
             tags_to_remove = dict([
                 ("route", route_list),
-                ("restriction", restriction_list),
+                ("route_master", route_master_list),
+                ("superroute", superroute_list),
+                #("restriction", restriction_list),
                 ("type", type_list)
                 ])
 
